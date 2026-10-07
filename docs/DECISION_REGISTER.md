@@ -20,4 +20,4 @@
 | D016 | 2026-10-07 | Keep the presentation technology replaceable; compare options before purchase. | Confirmed |
 | D017 | 2026-10-07 | Prefer React + Three.js/R3F for the first software proof; defer Unity until justified. | Proposed |
 
-Next decisions require current product research, prototype testing, rights checks and domain-expert review.
+| D018 | 2026-10-07 | Do not purchase an expensive physical display before low-cost proof gates validate the presentation geometry and experience. | Proposed |\n\nNext decisions require current product research, prototype testing, rights checks and domain-expert review.
