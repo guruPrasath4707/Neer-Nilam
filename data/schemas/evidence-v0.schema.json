@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://neer-nilam.local/schema/evidence-v0.json",
+  "title": "Neer-Nilam Evidence v0",
+  "type": "object",
+  "required": ["id", "subject_entity_id", "predicate", "source_id", "evidence_class", "verification_status"],
+  "properties": {
+    "id": {"type": "string"},
+    "assertion_text": {"type": ["string", "null"]},
+    "subject_entity_id": {"type": "string"},
+    "predicate": {"type": "string"},
+    "object_entity_id": {"type": ["string", "null"]},
+    "value": {"type": ["string", "number", "boolean", "null"]},
+    "source_id": {"type": "string"},
+    "source_locator": {"type": ["string", "null"]},
+    "source_date": {"type": ["string", "null"]},
+    "valid_from": {"type": ["string", "null"]},
+    "valid_to": {"type": ["string", "null"]},
+    "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "evidence_class": {"enum": ["A", "B", "C", "D", "E"]},
+    "verification_status": {"type": "string"},
+    "reviewer": {"type": ["string", "null"]},
+    "verified_at": {"type": ["string", "null"]},
+    "notes": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}
