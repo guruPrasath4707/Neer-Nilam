@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://neer-nilam.local/schema/scene-pack-v0.json",
+  "title": "Neer-Nilam Scene Pack v0",
+  "type": "object",
+  "required": ["scene_pack_version", "scene_id", "requested_interval", "state_kind", "entities", "layers", "data_gaps"],
+  "properties": {
+    "scene_pack_version": {"type": "string"},
+    "scene_id": {"type": "string"},
+    "requested_interval": {
+      "type": "object",
+      "required": ["from", "to"],
+      "properties": {
+        "from": {"type": ["string", "null"]},
+        "to": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "resolved_state_id": {"type": ["string", "null"]},
+    "state_kind": {"enum": ["DOCUMENTED", "RECONSTRUCTED", "INTERPRETED", "PROVISIONAL", "GAP"]},
+    "entities": {"type": "array", "items": {"type": "string"}},
+    "layers": {"type": "array", "items": {"type": "string"}},
+    "events": {"type": "array", "items": {"type": "string"}},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "asset_refs": {"type": "array", "items": {"type": "string"}},
+    "uncertainty": {"type": ["object", "null"]},
+    "attribution": {"type": "array", "items": {"type": "string"}},
+    "rights_notices": {"type": "array", "items": {"type": "string"}},
+    "data_gaps": {"type": "array", "items": {"type": "string"}},
+    "renderer_hints": {"type": "object"},
+    "generated_at": {"type": ["string", "null"]},
+    "generator_version": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}
