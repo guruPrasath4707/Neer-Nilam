@@ -1,5 +1,5 @@
 {
-  "$schema": "../../schemas/entity-v0.schema.json",
+  "$schema": "../schemas/entity-v0.schema.json",
   "id": "NN:site:brihadisvara-thanjavur",
   "entity_type": "SITE",
   "canonical_name": "Brihadisvara Temple, Thanjavur",
