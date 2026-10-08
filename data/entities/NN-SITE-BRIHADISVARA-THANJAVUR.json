@@ -1,0 +1,22 @@
+{
+  "$schema": "../../schemas/entity-v0.schema.json",
+  "id": "NN:site:brihadisvara-thanjavur",
+  "entity_type": "SITE",
+  "canonical_name": "Brihadisvara Temple, Thanjavur",
+  "alternate_names": ["Brihadisvara Temple", "Peruvudaiyar Kovil", "Rajarajesvaram"],
+  "geometry": null,
+  "geometry_type": null,
+  "spatial_reference": null,
+  "valid_from": null,
+  "valid_to": null,
+  "observation_time": null,
+  "document_time": null,
+  "ingestion_time": "2026-10-08",
+  "source_refs": ["SRC-UNESCO-TNT", "SRC-HRCE", "SRC-ASI", "SRC-TN-ARCH"],
+  "evidence_refs": [],
+  "asset_refs": [],
+  "rights_status": "REVIEW_REQUIRED",
+  "confidence": null,
+  "verification_status": "UNREVIEWED",
+  "notes": "Seed identity record only. Geometry, temporal states and claims require source-linked review."
+}
