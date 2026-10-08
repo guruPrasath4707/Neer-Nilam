@@ -233,3 +233,35 @@ The Stage 1 report supplied by the project team contains the following records. 
 ## Stage 1 validation rights note
 
 Manufacturer and academic sources are treated as authoritative for the specific facts they publish, but not as permission to reuse third-party media/assets. Marketplace and retailer pages are research leads only. No third-party asset was copied into the project during this validation pass.
+
+
+## Deeper physical/data research — W167 onward
+
+| ID | URL | Category | Status | Class | Purpose |
+|---|---|---|---|---|---|
+| W167 | https://onlinemaps.surveyofindia.gov.in/GeospatialGuidelines.aspx | GIS; Government | USEFUL | A | Current Survey of India geospatial guidelines |
+| W168 | https://surveyofindia.gov.in/pages/new-guidelines-on-geospatial-data-2021 | GIS; Government | REFERENCE | A | Official policy page and current policy publication status |
+| W169 | https://github.com/erc-dharma/tfa-tamilnadu-epigraphy | Epigraphy; Open Data; Academic | USEFUL | B | Structured Tamil Nadu epigraphic corpus and license |
+| W170 | https://github.com/orgs/erc-dharma/repositories | Epigraphy; Academic | USEFUL | B | DHARMA corpus ecosystem and related collections |
+| W171 | https://github.com/erc-dharma/tfa-tamilnadu-epigraphy/blob/master/DHARMA_INSTamilNadu00031.xml | Epigraphy; Academic | USEFUL | B | Example EpiDoc record and per-file rights/encoding |
+| W172 | https://github.com/erc-dharma/tfa-sii-epigraphy/blob/master/DHARMA_INStfaSIIv05p1i0228.xml | Epigraphy; Academic | USEFUL | B | South Indian Inscriptions structured example |
+| W173 | https://github.com/erc-dharma/tfa-accalpuram-epigraphy/ | Epigraphy; Academic | REFERENCE | B | DHARMA corpus workflow/license comparison |
+| W174 | https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM | GIS; DEM; Open Data | USEFUL | B | Copernicus DEM current availability/licensing |
+| W175 | https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf | GIS; DEM; License | USEFUL | B | Copernicus DEM license obligations |
+| W176 | https://tngis.tn.gov.in/wrd/ | Water; GIS; Government | USEFUL | A | Tamil Nadu WRD tank information system |
+| W177 | https://www.censusindia.gov.in/nada/index.php/catalog/45367 | History; Demography; Government | USEFUL | A | 2011 Thanjavur District Census Handbook Part A |
+| W178 | https://www.digitalarchives.cict.in/ | Manuscripts; Tamil; Academic | USEFUL | A/B | CICT palm-leaf manuscript digital library, IIIF and rights |
+| W179 | https://censusindia.gov.in/nada/index.php/catalog/45368 | History; Demography; Government | USEFUL | A | 2011 Thanjavur District Census Handbook Part B |
+| W180 | https://www.namami.gov.in/manuscript-database | Manuscripts; Government | USEFUL | A | National manuscript catalogue / Kriti Sampada |
+| W181 | https://namami.gov.in/database-menu-script | Manuscripts; Government | REFERENCE | A | Manuscript database schema/usage notes |
+| W182 | https://whc.unesco.org/en/list/250 | Heritage; Government/Institutional | USEFUL | A/D | Great Living Chola Temples authority reference |
+| W183 | https://openheritage3d.org/data | 3D; Digital Heritage | USEFUL | B/D | Open heritage dataset discovery and dataset metadata |
+| W184 | https://openheritage3d.org/faq | 3D; Digital Heritage; Rights | USEFUL | B/D | Dataset licensing and download/rights rules |
+| W185 | https://nwdp.nwic.gov.in/en/dataset/water-resource-project | Water; Open Data; Government | USEFUL | A/D | Water-resource project spatial datasets |
+| W186 | https://censusindia.gov.in/nada/index.php/catalog/6811 | History; Demography; Government | USEFUL | A | Thanjavur village/town/ward population data |
+| W187 | https://whc.unesco.org/en/list/250/ | Heritage; Government/Institutional | DUPLICATE | A/D | Same UNESCO Great Living Chola Temples page as W182 |
+
+## Research handling note
+
+The sources above were visited during the deeper physical/data research pass. Manufacturer, government, academic and repository pages are authoritative only within the facts and rights they actually publish. No assumption of asset redistribution rights is made merely from page access.
+
