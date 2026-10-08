@@ -26,12 +26,18 @@ Routine coding actions are intentionally **not** logged here.
 
 ## Status
 
-**Phase:** Concept validation / architecture exploration
+**Phase:** Physical representation + data-pool validation
 
 **Pilot focus:** Thanjavur Brihadisvara Temple
 
-**Primary external research:** DeepSeek analysis — Prompt 001
+**Research tracks:** Stage 1 display decision, physical-representation deep research, data-pool architecture
 
 ---
 
 Private project repository maintained by Guru Prasath N.
+
+## Current workstreams
+
+- Physical representation: Pepper's Ghost proof and projection-mapped relief proof are being developed as comparable prototype tracks.
+- Data pool: a source registry and Brihadisvara vertical-slice data contract are being established before bulk acquisition.
+- Purchase gate: no expensive display purchase until proof and comparison gates pass.
