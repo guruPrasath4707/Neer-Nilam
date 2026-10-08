@@ -1,0 +1,29 @@
+{
+  "$schema": "../schemas/scene-pack-v0.schema.json",
+  "scene_pack_version": "0.1.0",
+  "scene_id": "BRH-001-GAP-FIXTURE",
+  "requested_interval": {
+    "from": null,
+    "to": null
+  },
+  "resolved_state_id": "NN:state:brihadisvara:gap-001",
+  "state_kind": "GAP",
+  "entities": ["NN:site:brihadisvara-thanjavur"],
+  "layers": [],
+  "events": [],
+  "evidence_refs": [],
+  "asset_refs": [],
+  "uncertainty": {
+    "code": "NO_SUPPORTED_RECONSTRUCTION"
+  },
+  "attribution": [],
+  "rights_notices": [],
+  "data_gaps": ["NN:state:brihadisvara:gap-001"],
+  "renderer_hints": {
+    "flat": true,
+    "peppers_ghost": true,
+    "relief_projection": true
+  },
+  "generated_at": "2026-10-08",
+  "generator_version": "fixture-0"
+}
