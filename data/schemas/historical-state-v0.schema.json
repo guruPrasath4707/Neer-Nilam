@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://neer-nilam.local/schema/historical-state-v0.json",
+  "title": "Neer-Nilam Historical State v0",
+  "type": "object",
+  "required": ["id", "entity_id", "state_kind", "verification_status"],
+  "properties": {
+    "id": {"type": "string"},
+    "entity_id": {"type": "string"},
+    "label": {"type": "string"},
+    "valid_from": {"type": ["string", "null"]},
+    "valid_to": {"type": ["string", "null"]},
+    "state_kind": {"enum": ["DOCUMENTED", "RECONSTRUCTED", "INTERPRETED", "PROVISIONAL", "GAP"]},
+    "reconstruction_method": {"type": ["string", "null"]},
+    "asset_refs": {"type": "array", "items": {"type": "string"}},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "uncertainty": {"type": ["object", "null"]},
+    "verification_status": {"type": "string"},
+    "notes": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}
