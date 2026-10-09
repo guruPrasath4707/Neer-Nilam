@@ -1,0 +1,40 @@
+NEER-NILAM — MASTER PROJECT LOG
+Prepared: 2026-10-09
+Purpose: Append-only record of major decisions, collection milestones, unresolved gates and next actions.
+Detailed chronology remains in docs/project-log/001 through 013 on GitHub.
+
+001 — 2026-10-07 — Immersive heritage concept established: historical landscape story around Brihadisvara, connecting time, monument, landscape, water, people/events and evidence. Display is a client, not the product core.
+002 — 2026-10-07 — GIS and display options framed: Pepper's Ghost, transparent/light-field displays, projection mapping, relief, AR/MR and hybrid options. No large purchase without a low-cost proof.
+003 — 2026-10-07 — Stage-1 validation started. Engineering corrections include testing real optics, comparing relief projection as an equal proof track, and blocking expensive hardware.
+004 — 2026-10-08 — Data pool and physical research expanded. Shared model: source registry, rights, raw/restricted plane, normalization/QA, spatiotemporal entities, evidence graph, historical states, scene packs, presentation clients.
+005 — 2026-10-09 — Project pitched to Judy ma'am. Guidance relayed by the team: she will find a path for physical representation; focus now on software, datasets and data-lake collection. Physical display remains undecided.
+006 — 2026-10-09 — Groundwater, district agriculture reports, historical cartography and archival catalogue sources added.
+007 — 2026-10-09 — First local collector launch failed because commands were run from C:\Windows\System32, not the repository. No collection happened in that failed attempt.
+008 — 2026-10-09 — Repository cloned to C:\Users\gurun\source\Neer-Nilam; dry run confirmed no writes/downloads.
+009 — 2026-10-09 — F: verified as Seagate Expansion Drive, NTFS, USB, online, 931.51 GiB reported capacity and 374 GiB free at initial check.
+010 — 2026-10-09 — Initial collection completed, run 20261009-111437. DHARMA TN commit ab94f9e525e2ce21938e63ac93fd80aa78a4e423; DHARMA SII commit dfa95be6729f162c0e7b70eea15c51da94520ff4; HydroRIVERS 86.32 MiB; OSM cutout 998 elements; 553 XML licence rows; 581 checksum rows.
+011 — 2026-10-09 — Integrity audit: 581/581 hashes matched; zero missing files, zero mismatches; no attention-level events.
+012 — 2026-10-09 — DHARMA rights discrepancy: 507 XML files declare CC BY-SA 4.0 and 46 have no detected licence target; both repository READMEs say CC BY 4.0. No redistribution or public reusable derivatives until written clarification. This is an inventory finding, not a legal conclusion about the 46 records.
+013 — 2026-10-09 — Critical acquisition, categorization, root Log.txt, Word dossier and optional safe metadata publishing prepared. Follow-on acquisition remains pending until a local session manifest confirms what passed validation.
+
+CRITICAL COLLECTION PLAN
+P0: preserve/categorize the four already-collected sources; request the selected monthly CHIRPS v3 baseline for 2016-2025; obtain official Tamil Nadu Season and Crop Report 2024-2025 plus Statistical Handbook climate/rainfall, agriculture and irrigation sections; discover/validate the official CGWB groundwater yearbook PDF; attempt one ESA WorldCover tile candidate.
+P1/manual gates: JRC Global Surface Water tile selection; Copernicus DEM GLO-90; Census items/terms; NAI, Abhilekh Patal and David Rumsey map/archive items; CICT/Kriti Sampada manuscripts; Kaggle uTHCD rules; TamilOCR/TamilNet rights; TNGIS/WRD authorization; Open Heritage 3D dataset licence.
+Data count as downloaded only where the local manifest records validated or pre-existing validated status and associated hashes. Quarantine HTML interstitials and invalid payloads. Raw datasets stay on the external HDD; public GitHub receives documentation, scripts, source/rights records and sanitized logs.
+
+PHYSICAL REPRESENTATION — CURRENT STATUS
+Pepper's Ghost is a low-cost focal floating-image proof, but has a restricted viewing cone and contrast/alignment/ambient-light constraints; it is not a true volumetric hologram or a landscape base.
+Projection-mapped physical relief better expresses terrain, water, settlements, routes and the landscape as spatial geometry; it requires fabrication, calibration and room-light testing.
+Hybrid relief + projection + optional Pepper's Ghost focal layer + separate evidence display is the strongest current exhibition hypothesis only after separate low-cost A/B tests demonstrate measurable value.
+Recommendation: maintain a presentation-neutral software core. Test both low-cost approaches using the same supported scene. Consider the hybrid only if it adds comprehension; no expensive hardware purchase before tests and Judy ma'am's path become clear.
+
+EVIDENCE MODEL
+Source -> Evidence -> Entity -> Historical State -> Scene Pack -> Presentation Client.
+Separate documented claims, archaeological observations, scholarly interpretations, AI-assisted proposals and uncertainty. Record provenance, time fields, transformations, rights, confidence basis, reviewer and gaps. Modern environmental layers are not direct evidence of Chola-era states.
+
+NEXT ACTIONS
+1. Run the critical script in dry-run, confirm the Seagate volume, then execute on the verified drive only after reading drive identity and confirmation prompts.
+2. Review local Log.txt, JSONL run log, acquisition manifest, checksum CSV and quarantine folder.
+3. Resolve DHARMA licence conflict with written maintainer clarification before public reuse.
+4. Clip climate/raster sources to the Thanjavur-Kumbakonam-Cauvery pilot only after checking CRS, extent and product version.
+5. Build a small source-linked Brihadisvara evidence slice and deterministic scene-pack renderer before bulk application work.
