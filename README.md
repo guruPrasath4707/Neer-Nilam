@@ -4,40 +4,46 @@
 
 Neer-Nilam explores how Tamil Nadu's historical landscape can be represented as a time-aware, spatially connected digital system linking heritage sites, people, events, inscriptions, manuscripts, settlements, water systems, agriculture, and modern environmental context.
 
-## Current exploration
+## Current priority
 
-The first implementation track is an **interactive immersive / holographic-style presentation layer** for the Neer-Nilam platform, with the Thanjavur Brihadisvara Temple as the initial demonstration case.
+**Software foundations and dataset/data-lake collection**, following the guidance relayed after pitching the project to Judy ma'am. Judy ma'am is exploring a path for the physical representation. The physical display choice remains open and is not the current implementation gate.
 
-The physical display is treated as a **presentation client**, not as the core product. The core product is the historical data, evidence, temporal model, 3D representation, and knowledge graph behind it.
+The pilot remains focused on the **Thanjavur–Kumbakonam–Cauvery corridor**, beginning with a source-linked Brihadisvara vertical slice, not a statewide data dump.
 
-## Principles
+## Core principles
 
 - Evidence and provenance come before visual spectacle.
 - AI-assisted reconstruction is provisional until expert verification.
 - Historical states are represented from evidence rather than invented continuous morphing.
-- The pilot remains intentionally narrow before statewide expansion.
-- "Hologram" is used as an experience descriptor unless the underlying display technology warrants a more precise term.
+- Modern geography is not silently substituted for historical geography.
+- Source rights, attribution, uncertainty and transformations are recorded.
+- Raw datasets should be stored on the user's external data drive, not committed to this public repository unless redistribution rights are explicitly cleared.
+- The presentation layer remains replaceable; no final physical display technology has been selected.
+
+## Data collection
+
+The curated acquisition queue is data/manifests/data-lake-acquisition-v1.csv. The master website/source trail is docs/sources/WEBSITE_INDEX.md.
+
+The Windows collector is scripts/collection/Collect-NeerNilamData.ps1. It is dry-run by default and only downloads after the Execute switch and interactive confirmation. Run from the local repository folder in PowerShell 7.
+
+Dry run:
+    pwsh -ExecutionPolicy Bypass -File .\scripts\collection\Collect-NeerNilamData.ps1 -DestinationRoot 'F:\Neer-Nilam-DataLake'
+
+Confirmed collection, only after verifying that the destination is the actual Seagate volume:
+    pwsh -ExecutionPolicy Bypass -File .\scripts\collection\Collect-NeerNilamData.ps1 -DestinationRoot 'F:\Neer-Nilam-DataLake' -Execute
+
+It downloads only the initial public/reviewable set: DHARMA Tamil Nadu epigraphy, DHARMA SII with per-file XML licence inventory, HydroRIVERS Asia, and a bounded current OSM corridor extract. It does not automatically download Kaggle data, manuscript images, restricted government GIS, whole-world raster collections, or large 3D datasets.
+
+Read docs/research/data/003-data-lake-collection-plan-001.md before acquisition. A public webpage is not blanket permission to republish its data or images.
 
 ## Project log
 
-Major ideas, external AI research, decisions, assumptions, rejected approaches, milestones, and current state are recorded in `docs/project-log/`.
+Major ideas, prompts, research results, decisions, assumptions, rejected approaches, collection milestones, permissions and current status are recorded in docs/project-log/. Routine commands are not individually logged.
 
-Routine coding actions are intentionally **not** logged here.
+## Repository status
 
-## Status
-
-**Phase:** Physical representation + data-pool validation
-
-**Pilot focus:** Thanjavur Brihadisvara Temple
-
-**Research tracks:** Stage 1 display decision, physical-representation deep research, data-pool architecture
-
----
-
-Private project repository maintained by Guru Prasath N.
-
-## Current workstreams
-
-- Physical representation: Pepper's Ghost proof and projection-mapped relief proof are being developed as comparable prototype tracks.
-- Data pool: a source registry and Brihadisvara vertical-slice data contract are being established before bulk acquisition.
-- Purchase gate: no expensive display purchase until proof and comparison gates pass.
+**Visibility:** Public  
+**Phase:** software-first data-lake collection  
+**Pilot start:** Brihadisvara Temple, Thanjavur  
+**Physical representation:** undecided; guidance path is being explored by Judy ma'am  
+**Application implementation:** not yet started
