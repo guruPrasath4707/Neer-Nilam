@@ -125,8 +125,23 @@ function ValidSignature([string]$Path,[string]$Kind,[long]$Min) {
  return (($b[0]-eq 0x49 -and $b[1]-eq 0x49 -and $b[2]-eq 0x2A -and $b[3]-eq 0) -or ($b[0]-eq 0x4D -and $b[1]-eq 0x4D -and $b[2]-eq 0 -and $b[3]-eq 0x2A) -or ($b[0]-eq 0x49 -and $b[1]-eq 0x49 -and $b[2]-eq 0x2B -and $b[3]-eq 0) -or ($b[0]-eq 0x4D -and $b[1]-eq 0x4D -and $b[2]-eq 0 -and $b[3]-eq 0x2B))
 }
 function Record([string]$Id,[string]$Title,[string]$Url,[string]$Status,[string]$Rel,[string]$Rights,[string]$Notes,[switch]$Hash) {
- $p=Join-Path $Root $Rel;$exists=Test-Path -LiteralPath $p -PathType Leaf;$size=0L;$sha=''
- if($exists){$it=Get-Item -LiteralPath $p;$size=$it.Length;if($Hash){$sha=(Get-FileHash -LiteralPath $p -Algorithm SHA256).Hash;$HashRows.Add([pscustomobject]@{relative_path=$Rel;size_bytes=$size;sha256=$sha;dataset_id=$Id;captured_utc=(Get-Date).ToUniversalTime().ToString('o')})}}
+ $p=Join-Path $Root $Rel
+ $isFile=Test-Path -LiteralPath $p -PathType Leaf
+ $isDir=Test-Path -LiteralPath $p -PathType Container
+ $exists=($isFile -or $isDir)
+ $size=0L
+ $sha=''
+ if($isFile){
+  $it=Get-Item -LiteralPath $p
+  $size=$it.Length
+  if($Hash){
+   $sha=(Get-FileHash -LiteralPath $p -Algorithm SHA256).Hash
+   $HashRows.Add([pscustomobject]@{relative_path=$Rel;size_bytes=$size;sha256=$sha;dataset_id=$Id;captured_utc=(Get-Date).ToUniversalTime().ToString('o')})
+  }
+ } elseif($isDir) {
+  $fileList=@(Get-ChildItem -LiteralPath $p -File -Recurse -ErrorAction SilentlyContinue)
+  if($fileList.Count -gt 0){$size=($fileList | Measure-Object -Property Length -Sum).Sum}
+ }
  $Rows.Add([pscustomobject]@{session_id=$Session;dataset_id=$Id;title=$Title;source_url=$Url;status=$Status;relative_path=$Rel;exists=[bool]$exists;size_bytes=$size;sha256=$sha;rights_status=$Rights;notes=$Notes})
 }
 function Get-Asset([string]$Id,[string]$Title,[string]$Url,[string]$Rel,[string]$Kind,[long]$Min,[string]$Rights,[string]$Notes) {
@@ -181,9 +196,15 @@ $osmDir=Join-Path $Root '01_RAW_DATA\03_GEOSPATIAL\OpenStreetMap'
 $osm=Get-ChildItem -LiteralPath $osmDir -Filter 'overpass-thanjavur-kumbakonam-*.json' -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 if($osm){$rel=$osm.FullName.Substring($Root.Length).TrimStart('\');Record 'DLA-003' 'OpenStreetMap corridor extract' 'https://www.openstreetmap.org/copyright' 'ALREADY_COLLECTED' $rel 'ODBL_ATTRIBUTION_REQUIRED' 'Initial run reported 998 current mapped elements; not historical evidence.' -Hash}
 else{Record 'DLA-003' 'OpenStreetMap corridor extract' 'https://www.openstreetmap.org/copyright' 'EXISTING_EXTRACT_NOT_FOUND' '01_RAW_DATA\03_GEOSPATIAL\OpenStreetMap' 'ODBL_ATTRIBUTION_REQUIRED' 'No matching JSON cutout found after categorization.'}
-$dossierSrc=Join-Path $Repo 'docs\project-dossier\Neer-Nilam_Project_History_and_Collection_Dossier_2026-10-09.docx'
-if(Test-Path -LiteralPath $dossierSrc -PathType Leaf){Copy-Item -LiteralPath $dossierSrc -Destination (Join-Path $Root '06_PROJECT_DOCUMENTS\Neer-Nilam_Project_History_and_Collection_Dossier_2026-10-09.docx') -Force;Event 'DOCX_COPIED' 'DOCX-001' 'Copied project history and physical-representation Word dossier.' '06_PROJECT_DOCUMENTS'}
-else{Event 'DOCX_MISSING_FROM_CLONE' 'DOCX-001' 'Run git pull before session; the dossier was not in the local repository yet.' '06_PROJECT_DOCUMENTS'}
+$dossierName='Neer-Nilam_Project_History_and_Collection_Dossier_2026-10-09.docx'
+$dossierCandidates=@(
+ (Join-Path $Repo ("docs\project-dossier\"+$dossierName)),
+ (Join-Path $env:USERPROFILE ("Downloads\"+$dossierName)),
+ (Join-Path $env:USERPROFILE ("Desktop\"+$dossierName))
+)
+$dossierSrc=$dossierCandidates | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+if($dossierSrc){Copy-Item -LiteralPath $dossierSrc -Destination (Join-Path $Root ("06_PROJECT_DOCUMENTS\"+$dossierName)) -Force;Event 'DOCX_COPIED' 'DOCX-001' "Copied project history and physical-representation Word dossier from $dossierSrc." '06_PROJECT_DOCUMENTS'}
+else{Event 'DOCX_MISSING' 'DOCX-001' 'Word dossier was not found in the clone, Downloads or Desktop. Download the dossier artifact, save it in Downloads, and rerun the session if the file is needed on Seagate.' '06_PROJECT_DOCUMENTS'}
 $manifestSrc=Join-Path $Repo 'data\manifests\critical-data-acquisition-session-v1.csv'
 if(Test-Path -LiteralPath $manifestSrc -PathType Leaf){Copy-Item -LiteralPath $manifestSrc -Destination (Join-Path $Root '00_ADMIN\manifests\critical-data-acquisition-session-v1.csv') -Force}
 $logSrc=Join-Path $Repo 'docs\project-log\Log.txt'
