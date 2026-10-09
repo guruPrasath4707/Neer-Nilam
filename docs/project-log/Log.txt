@@ -38,3 +38,5 @@ NEXT ACTIONS
 3. Resolve DHARMA licence conflict with written maintainer clarification before public reuse.
 4. Clip climate/raster sources to the Thanjavur-Kumbakonam-Cauvery pilot only after checking CRS, extent and product version.
 5. Build a small source-linked Brihadisvara evidence slice and deterministic scene-pack renderer before bulk application work.
+
+014 — 2026-10-09 — Completed the full Markdown and Word project dossier, 23-row critical acquisition queue, runbook and handoff ZIP. The Word dossier must be saved in Windows Downloads before running the current script so it can be copied to Seagate. These are committed documentation deliverables; follow-on downloads and folder migration still require the user's local PowerShell execution. Raw datasets remain off public GitHub.
