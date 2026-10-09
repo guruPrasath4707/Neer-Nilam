@@ -299,3 +299,23 @@ These entries support the software-first data-lake phase. Their presence records
 | W213 | https://chc.ucsb.edu/data/chirps3 | Rainfall; Climate; Open Data | USEFUL | B | CHIRPS v3 since 1981 to near-present | CC BY 4.0/public-domain dedication; cite DOI/version/date; not station observations | 2026-10-09 | DLA-008 |
 | W214 | https://github.com/chc-ucsb/chc-data-download | Software; Data Acquisition; GitHub | REFERENCE | D | Optional source-specific date-range downloader | Review requirements before adopting; no dependency added yet | 2026-10-09 | DLA-008 |
 | W215 | https://data.chc.ucsb.edu/products/CHIRPS/v3.0/ | Rainfall; Dataset Download | USEFUL | B | CHIRPS v3 product directories | Choose specific dates/variants and clip region before retaining long time series | 2026-10-09 | DLA-008 |
+
+## Groundwater, agriculture and historical cartography research — W216 onward (accessed 2026-10-09)
+
+This group addresses proposal domains that need observations or archive discovery beyond the first acquisition run. Accessing a catalogue page does not authorize bulk extraction or republishing an image.
+
+| ID | URL | Category | Status | Class | Purpose | Rights / findings | Access date | Related IDs |
+|---|---|---|---|---|---|---|---|---|
+| W216 | https://www.cgwb.gov.in/ground-water-level-monitoring | Water; Groundwater; Government | USEFUL | A | Official groundwater monitoring page links yearbooks and observation tables | Manual access; exact station/time period and terms must be checked | 2026-10-09 | DLA-020;DLA-021 |
+| W217 | https://cgwb.gov.in/cgwbpnm/search?cat_id=4&search=search&state_id=33&type=2 | Water; Groundwater; Government | USEFUL | A | CGWB Tamil Nadu groundwater yearbook catalogue | Catalogue metadata may be inconsistent; cross-check downloaded report | 2026-10-09 | DLA-020;DLA-021 |
+| W218 | https://cgwb.gov.in/cgwbpnm/public/publication-detail/2023 | Water; Groundwater; Government | USEFUL | A | Groundwater Year Book Tamil Nadu and Puducherry 2024-2025 listing | Download/access through official catalogue; confirm actual PDF, tables and terms | 2026-10-09 | DLA-021 |
+| W219 | https://des.tn.gov.in/en/node/18 | Agriculture; Statistics; Government | USEFUL | A | Tamil Nadu Season and Crop Report 2024-2025 | Report includes land utilisation, irrigation, crops, yield/production and rainfall context; preserve table/page references | 2026-10-09 | DLA-022 |
+| W220 | https://www.tnagrisnet.tn.gov.in/ARS/dcs/comp_data | Agriculture; Statistics; Government | USEFUL | A | Dynamic district-wise crop report; current 2025-2026 table shown | Record exact season, crop, district, unit and retrieval time; review portal terms | 2026-10-09 | DLA-023 |
+| W221 | https://data.desagri.gov.in/website/crops-report-district-level-web | Agriculture; Statistics; Government | USEFUL | A | Government of India district-level crop Area/Production/Yield report generator | Use selected query parameters; do not merge series without checking definitions | 2026-10-09 | DLA-024 |
+| W222 | https://www.nationalarchives.nic.in/en/public-records-holdings/cartographic-records | History; Historical Maps; Government | USEFUL | A/D | National Archives of India cartographic record discovery | Historical map holdings include Survey of India historical maps 1700-1900; access/reproduction subject to rules | 2026-10-09 | DLA-025 |
+| W223 | https://nationalarchives.nic.in/en/online-records-national-archives-india/abhilekh-patal | History; Archives; Government | USEFUL | A/D | Official Abhilekh Patal catalogue/digitized records access | Search metadata first; item-level access/reproduction rules apply | 2026-10-09 | DLA-026 |
+| W224 | https://www.davidrumsey.com/about/copyright-and-permissions | Historical Maps; Rights | USEFUL | D | David Rumsey historical map image reuse policy | Map and publisher rights must be checked; commercial reproduction may require permission | 2026-10-09 | DLA-027 |
+| W225 | https://www.davidrumsey.com/luna/servlet/detail/RUMSEY~8~1~295959~90066882%3AIndia | Historical Maps; Cartography | REFERENCE | D | One example map of India dated 1835 | Broad-scale context only; not a local Thanjavur/Cauvery map; map-specific rights apply | 2026-10-09 | DLA-027 |
+| W226 | https://nationalarchives.nic.in/en/online-portal-abhilekh-patal | History; Archives; Government | REFERENCE | A/D | Related official archive portal overview | Related to W223; access and page-on-demand/digitization routes need item-level review | 2026-10-09 | DLA-026 |
+| W227 | https://www.davidrumsey.com/about | Historical Maps; Rights | REFERENCE | D | Collection history and copyright summary | Collection access is not blanket commercial reuse permission | 2026-10-09 | DLA-027 |
+
