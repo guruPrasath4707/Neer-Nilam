@@ -86,6 +86,7 @@ Historical milestones compiled 2026-10-09:
 011. Integrity audit passed 581/581 hashes, zero missing files and mismatches, no attention-level collection events.
 012. DHARMA conflict: 507 XML records declare CC BY-SA 4.0; 46 no licence target detected; both repository READMEs say CC BY 4.0. No redistribution or public reusable derivatives until written clarification.
 013. Critical acquisition, file categorization, Log and Word dossier session prepared; execution result appended below.
+014. Complete Markdown dossier and Word handoff package prepared, with acquisition queue/runbook/script linked in public GitHub. Local organizer/downloads are still pending; save the Word artifact in Downloads before running.
 
 Guardrails: modern OSM, HydroRIVERS, rainfall, groundwater, agriculture and land cover are context, not direct proof of Chola-era conditions. Record source, valid/document time, transformations, rights, uncertainty and human review. Do not push raw datasets or permission-sensitive files to public GitHub.
 '@ | Set-Content -LiteralPath $Log -Encoding utf8NoBOM
