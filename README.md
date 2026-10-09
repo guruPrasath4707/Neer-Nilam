@@ -34,7 +34,7 @@ Confirmed collection, only after verifying that the destination is the actual Se
 
 It downloads only the initial public/reviewable set: DHARMA Tamil Nadu epigraphy, DHARMA SII with per-file XML licence inventory, HydroRIVERS Asia, and a bounded current OSM corridor extract. It does not automatically download Kaggle data, manuscript images, restricted government GIS, whole-world raster collections, or large 3D datasets.
 
-Read docs/research/data/003-data-lake-collection-plan-001.md and docs/research/data/004-critical-collection-session-runbook-001.md before acquisition. The follow-on source queue is data/manifests/critical-data-acquisition-session-v1.csv. The Word project-history and physical-representation dossier is stored at docs/project-dossier/Neer-Nilam_Project_History_and_Collection_Dossier_2026-10-09.docx. A public webpage is not blanket permission to republish its data or images.
+Read docs/research/data/003-data-lake-collection-plan-001.md and docs/research/data/004-critical-collection-session-runbook-001.md before acquisition. The follow-on source queue is data/manifests/critical-data-acquisition-session-v1.csv. The Word project-history and physical-representation dossier is distributed as a handoff artifact in the project workflow. Save `Neer-Nilam_Project_History_and_Collection_Dossier_2026-10-09.docx` in your Windows Downloads folder before running the critical session; the script copies it into `06_PROJECT_DOCUMENTS` on Seagate. The authoritative text logs and display research remain versioned in `docs/project-log/`, `docs/research/display/` and the collection runbook. A public webpage is not blanket permission to republish its data or images.
 
 ## Project log
 
