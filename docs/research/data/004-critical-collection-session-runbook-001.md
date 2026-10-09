@@ -15,7 +15,7 @@ The initial four source tasks are already collected and the first 581-file hash 
 2. Creates canonical folders for raw datasets, derived assets, evidence, scene packs, physical-display research, documents, logs, reports and quarantine.
 3. Moves existing DHARMA, HydroRIVERS and OSM roots to canonical folders while retaining their old paths with NTFS junctions. Aborts rather than merges if both old and new paths already exist.
 4. Creates or appends the root Log.txt without replacing an existing file.
-5. Copies the Word dossier and acquisition manifest from GitHub to the HDD.
+5. Copies the Word dossier into the HDD from the repository dossier path, or from the user's Downloads/Desktop folder. Before execution, download the Word handoff artifact from the ChatGPT conversation and save it as `Neer-Nilam_Project_History_and_Collection_Dossier_2026-10-09.docx` in Downloads. The acquisition manifest is copied from the repository.
 6. Attempts selected 2016-2025 monthly CHIRPS v3 files; the TN Season and Crop Report 2024-2025; Statistical Handbook climate/rainfall, agriculture and irrigation PDFs; dynamic CGWB yearbook link discovery; and one ESA WorldCover tile candidate.
 7. Validates PDF/TIFF signatures and minimum sizes, retries downloads, quarantines invalid payloads, and creates run manifests and checksums.
 8. Records gated JRC surface water, Copernicus DEM, Census, historical maps, manuscripts, Kaggle, TNGIS and heritage 3D instead of scraping or presuming rights.
@@ -27,6 +27,8 @@ The initial four source tasks are already collected and the first 581-file hash 
     git -C 'C:\Users\gurun\source\Neer-Nilam' pull --ff-only origin main
 
 If status shows local changes, inspect them before pulling.
+
+Download the Word dossier artifact supplied with the assistant handoff and save it to `$env:USERPROFILE\Downloads\Neer-Nilam_Project_History_and_Collection_Dossier_2026-10-09.docx`. The collector checks the repository, Downloads and Desktop for this file and copies it to `06_PROJECT_DOCUMENTS`.
 
 ## Step 2 — safe dry run
 
