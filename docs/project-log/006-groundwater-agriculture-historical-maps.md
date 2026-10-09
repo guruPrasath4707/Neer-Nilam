@@ -39,3 +39,12 @@ A historic map is a dated representation with a purpose and scale, not a perfect
 ## Current status and next step
 
 The catalogue and manifest are updated; the local Seagate collection has not yet been executed. The safe collector intentionally does not scrape or automatically download these gated sources. After Tier-0 local collection, manually acquire selected groundwater/crop report files and map copies only after terms and permitted use are recorded. Keep original PDFs/images, extracted tables, source citations and normalized records linked.
+
+## Supplemental catalogue coverage
+
+A second source pass logged W228-W245 and added two acquisition candidates:
+- DLA-028: Open Government Data district/season crop production CSV resource, pending source terms and field-definition review.
+- DLA-029: NWDP/CGWB groundwater telemetry, only if current resources actually include relevant Tamil Nadu/Cauvery stations.
+
+Old CGWB tables and yearbooks remain useful archive leads, but exact report version, station/date coverage and current access conditions must be established. Duplicate page visits are retained in the website index rather than silently removed.
+
