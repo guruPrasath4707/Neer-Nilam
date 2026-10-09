@@ -195,9 +195,9 @@ The Stage 1 report supplied by the project team contains the following records. 
 | W130 | https://blog.lookingglassfactory.com/looking-glass-ships-its-latest-spatial-displays/ | Holographic/Display Technology | USEFUL | A | Official shipping/software ecosystem |
 | W131 | https://docs.lookingglassfactory.com/ | Developer Docs | REFERENCE | A | Current Looking Glass software lineup |
 | W132 | https://docs.lookingglassfactory.com/developer-tools/webxr/spline | Developer Docs | USEFUL | A | WebXR/R3F compatibility evidence |
-| W133 | https://checkout.lookingglassfactory.com/products/hld-displays-early-access | Holographic/Display Technology | USEFUL | A | HLD current price/content/deployment |
-| W134 | https://checkout.lookingglassfactory.com/products/86-hld-preorder | Holographic/Display Technology | USEFUL | A | HLD installation/computer requirements |
-| W135 | https://lookingglassfactory.com/hld-overview | Holographic/Display Technology | USEFUL | A | HLD current positioning and specs |
+| W133 | https://checkout.lookingglassfactory.com/products/hld-displays-early-access | Holographic/Display Technology | DUPLICATE | A | HLD current price/content/deployment |
+| W134 | https://checkout.lookingglassfactory.com/products/86-hld-preorder | Holographic/Display Technology | DUPLICATE | A | HLD installation/computer requirements |
+| W135 | https://lookingglassfactory.com/hld-overview | Holographic/Display Technology | DUPLICATE | A | HLD current positioning and specs |
 | W136 | https://lookingglassfactory.com/how-it-works | Holographic/Display Technology | USEFUL | A | HLD content workflow |
 | W137 | https://lookingglassfactory.com/resources | Developer Docs | REFERENCE | A | Looking Glass tooling/resources |
 | W138 | https://lookingglassfactory.com/terms-and-conditions | Terms/Legal | REFERENCE | A | User-content/terms reference |
@@ -291,7 +291,7 @@ These entries support the software-first data-lake phase. Their presence records
 | W205 | https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_DEM_GLO30_2024_1 | GIS; DEM; Environment | REFERENCE | B | Copernicus DEM dataset catalogue and attribution | Check current access conditions with primary Copernicus Data Space guidance | 2026-10-09 | DLA-005 |
 | W206 | https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM.html | GIS; DEM; API | USEFUL | B | DEM API availability and GLO-30 access restrictions | GLO-30 access category restrictions; use permitted account path only | 2026-10-09 | DLA-005 |
 | W207 | https://dataspace.copernicus.eu/news/2026-8-25-copernicus-dem-30m-view-service-update | GIS; DEM; Policy | USEFUL | A/D | Current notice on GLO-30 authorized user categories; GLO-90 fallback | Access category must be respected; do not bypass controls | 2026-10-09 | DLA-005 |
-| W208 | https://github.com/erc-dharma/tfa-sii-epigraphy/blob/master/DHARMA_INStfaSIIv05p1i0228.xml | Epigraphy; Licensing | USEFUL | B | Example SII record declares CC BY-SA 4.0 in XML header | File-level terms can vary; scan each record | 2026-10-09 | DLA-002 |
+| W208 | https://github.com/erc-dharma/tfa-sii-epigraphy/blob/master/DHARMA_INStfaSIIv05p1i0228.xml | Epigraphy; Licensing | DUPLICATE | B | Example SII record declares CC BY-SA 4.0 in XML header | File-level terms can vary; scan each record | 2026-10-09 | DLA-002 |
 | W209 | https://github.com/erc-dharma/tfa-sii-epigraphy/blob/master/DHARMA_INStfaSIIv04p0i0223.xml | Epigraphy; Licensing | USEFUL | B | Additional record-level licensing/content sample | File-level terms require per-record inventory | 2026-10-09 | DLA-002 |
 | W210 | https://github.com/erc-dharma/tfa-sii-epigraphy/blob/master/DHARMA_INStfaSIIv02p0i0004.xml | Epigraphy; Licensing | USEFUL | B | Inscription content relating to temple revenue and village obligations | Content relevance remains a hypothesis until exact place/date is verified | 2026-10-09 | DLA-002 |
 | W211 | https://chc.ucsb.edu/data/chirps/ | Rainfall; Climate; Open Data | USEFUL | B | CHIRPS v2 transition notice | v3 is current acquisition target; cite exact version | 2026-10-09 | DLA-008 |
