@@ -10,7 +10,7 @@ HISTORICAL PROJECT MILESTONES (repository logs 001-013)
 005. The team pitched Neer-Nilam to Judy ma'am. The guidance relayed by the team: Judy ma'am would explore a path for the physical representation; the immediate emphasis is software and dataset/data-lake collection. Physical hardware/display choice remains open.
 006. Groundwater, agriculture and historical-map source families added to website/source research and acquisition manifest. Gated acquisition requires item and terms checks.
 007. First collector launch failed because PowerShell was at C:\Windows\System32 rather than inside the repository. No download occurred in that failed attempt.
-008. Repository clone established at C:\Users\gurun\source\Neer-Nilam; Git pull was up-to-date; dry-run confirmed no data was written.
+008. Repository clone established at [LOCAL_WINDOWS_PROFILE]\source\Neer-Nilam; Git pull was up-to-date; dry-run confirmed no data was written.
 009. Seagate Expansion Drive verified on F:, NTFS, USB, 931.51 GiB reported capacity, 374 GiB free at initial verification, disk Online.
 010. First Seagate collection session 20261009-111437 completed: DHARMA Tamil Nadu commit ab94f9e525e2ce21938e63ac93fd80aa78a4e423; DHARMA SII commit dfa95be6729f162c0e7b70eea15c51da94520ff4; HydroRIVERS Asia 86.32 MiB; OSM extract 998 elements; 553 XML licence inventory rows; 581 checksum rows.
 011. Initial integrity audit passed: all 581 recorded hashes matched; no missing files or mismatches; collection log showed no attention-level errors.
