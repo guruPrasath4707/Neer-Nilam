@@ -21,7 +21,7 @@ The storage audit CSV remains the historical 2026-10-10 09:51:10 snapshot and ha
 
 ## 3. Two untracked CHIRPS metadata candidates in the local clone
 
-A later local PowerShell attempt stopped safely when it found these pre-existing untracked files under `C:\Users\gurun\source\Neer-Nilam`:
+A later local PowerShell attempt stopped safely when it found these pre-existing untracked files under `%USERPROFILE%\source\Neer-Nilam`:
 
 - `docs/collection-runs/CHIRPS-monthly-2016-2025-20261010-012138-checksums.csv`
 - `docs/collection-runs/CHIRPS-monthly-2016-2025-20261010-012138-manifest.csv`
@@ -30,7 +30,7 @@ They were not staged, deleted or included in the publication commit. A separatel
 
 ## 4. Word dossier remains a local task
 
-The earlier storage audit marked the expected Seagate dossier path as REVIEW. The user subsequently located two 10 October DOCX candidates in `C:\Users\gurun\Desktop\Neer Nilan` (timestamps 09:53 and 10:12); their contents still need comparison before choosing the authoritative copy. No claim is made here that a DOCX has since been copied to `F:\Neer-Nilam-DataLake\06_PROJECT_DOCUMENTS`.
+The earlier storage audit marked the expected Seagate dossier path as REVIEW. The user subsequently located two 10 October DOCX candidates in `%USERPROFILE%\Desktop\Neer Nilan` (timestamps 09:53 and 10:12); their contents still need comparison before choosing the authoritative copy. No claim is made here that a DOCX has since been copied to `F:\Neer-Nilam-DataLake\06_PROJECT_DOCUMENTS`.
 
 ## 5. Rights gate remains open
 
