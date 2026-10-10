@@ -10,7 +10,7 @@ Detailed chronology remains in docs/project-log/001 through 013 on GitHub.
 005 — 2026-10-09 — Project pitched to Judy ma'am. Guidance relayed by the team: she will find a path for physical representation; focus now on software, datasets and data-lake collection. Physical display remains undecided.
 006 — 2026-10-09 — Groundwater, district agriculture reports, historical cartography and archival catalogue sources added.
 007 — 2026-10-09 — First local collector launch failed because commands were run from C:\Windows\System32, not the repository. No collection happened in that failed attempt.
-008 — 2026-10-09 — Repository cloned to C:\Users\gurun\source\Neer-Nilam; dry run confirmed no writes/downloads.
+008 — 2026-10-09 — Repository cloned to %USERPROFILE%\source\Neer-Nilam; dry run confirmed no writes/downloads.
 009 — 2026-10-09 — F: verified as Seagate Expansion Drive, NTFS, USB, online, 931.51 GiB reported capacity and 374 GiB free at initial check.
 010 — 2026-10-09 — Initial collection completed, run 20261009-111437. DHARMA TN commit ab94f9e525e2ce21938e63ac93fd80aa78a4e423; DHARMA SII commit dfa95be6729f162c0e7b70eea15c51da94520ff4; HydroRIVERS 86.32 MiB; OSM cutout 998 elements; 553 XML licence rows; 581 checksum rows.
 011 — 2026-10-09 — Integrity audit: 581/581 hashes matched; zero missing files, zero mismatches; no attention-level events.
