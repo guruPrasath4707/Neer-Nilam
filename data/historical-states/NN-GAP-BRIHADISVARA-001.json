@@ -1,5 +1,4 @@
 {
-  "$schema": "../schemas/historical-state-v0.schema.json",
   "id": "NN:state:brihadisvara:gap-001",
   "entity_id": "NN:site:brihadisvara-thanjavur",
   "label": "Unsupported requested period",
@@ -11,7 +10,7 @@
   "evidence_refs": [],
   "uncertainty": {
     "code": "NO_SUPPORTED_RECONSTRUCTION",
-    "message": "Historical reconstruction not yet supported for the requested interval."
+    "message": "No reviewed historical reconstruction is currently available for the requested interval in the current project dataset."
   },
   "verification_status": "UNREVIEWED",
   "notes": "Fixture demonstrating explicit data-gap behavior. Do not substitute a nearby historical model."
