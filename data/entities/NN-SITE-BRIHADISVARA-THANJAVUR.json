@@ -21,7 +21,9 @@
     "SRC-ASI",
     "SRC-TN-ARCH"
   ],
-  "evidence_refs": [],
+  "evidence_refs": [
+    "NN:evidence:brh:component-001"
+  ],
   "asset_refs": [],
   "rights_status": "REVIEW_REQUIRED",
   "confidence": null,
