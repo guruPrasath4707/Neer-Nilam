@@ -1,0 +1,6 @@
+# Python-generated local files
+__pycache__/
+*.py[cod]
+
+# Generated flat-viewer output; regenerate from the committed scene pack
+prototypes/flat-viewer/*.html
