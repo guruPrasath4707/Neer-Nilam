@@ -90,6 +90,8 @@ def _candidate_reasons(
             reasons.append(f"EVIDENCE_ENTITY_MISMATCH:{evidence_id}")
         if record.get("verification_status") != "VERIFIED":
             reasons.append(f"EVIDENCE_NOT_VERIFIED:{evidence_id}")
+        if not isinstance(record.get("source_locator"), str) or not record["source_locator"].strip():
+            reasons.append(f"EVIDENCE_SOURCE_LOCATOR_MISSING:{evidence_id}")
         if not str(record.get("reviewer", "")).strip():
             reasons.append(f"EVIDENCE_REVIEWER_MISSING:{evidence_id}")
         try:
@@ -123,8 +125,19 @@ def _candidate_reasons(
             continue
         if asset.get("verification_status") != "VERIFIED":
             reasons.append(f"ASSET_NOT_VERIFIED:{asset_id}")
+        if not str(asset.get("verified_by", "")).strip():
+            reasons.append(f"ASSET_REVIEWER_MISSING:{asset_id}")
+        try:
+            if _validate_iso_date(asset.get("verified_at"), f"asset[{asset_id}].verified_at") is None:
+                reasons.append(f"ASSET_VERIFICATION_DATE_MISSING:{asset_id}")
+        except ScenePackError:
+            reasons.append(f"ASSET_VERIFICATION_DATE_INVALID:{asset_id}")
         if asset.get("rights_status") != "CLEARED":
             reasons.append(f"ASSET_RIGHTS_NOT_CLEARED:{asset_id}")
+        if not str(asset.get("license_id", "")).strip():
+            reasons.append(f"ASSET_LICENSE_BASIS_MISSING:{asset_id}")
+        if not str(asset.get("attribution", "")).strip():
+            reasons.append(f"ASSET_ATTRIBUTION_MISSING:{asset_id}")
         if not isinstance(asset.get("sha256"), str) or not SHA256_PATTERN.fullmatch(asset["sha256"]):
             reasons.append(f"ASSET_SHA256_INVALID:{asset_id}")
         source_id = asset.get("source_id")
