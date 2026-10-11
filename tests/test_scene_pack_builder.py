@@ -158,6 +158,8 @@ class ScenePackBuilderTests(unittest.TestCase):
             self.assertEqual(payload["evidence_refs"], [EVIDENCE_ID])
             self.assertTrue(any("UNESCO World Heritage Centre" in item for item in payload["attribution"]))
             self.assertIn("asset_fallback_allowed", payload["renderer_hints"])
+            committed_fixture = (ROOT / "data/scene-packs/BRH-001-GAP-FIXTURE.json").read_text(encoding="utf-8")
+            self.assertEqual(output_path.read_text(encoding="utf-8"), committed_fixture)
 
 
     def test_flat_viewer_renders_gap_and_source_review_notice(self) -> None:
