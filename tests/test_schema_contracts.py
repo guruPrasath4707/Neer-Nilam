@@ -6,6 +6,8 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
+from scripts.scene_packs.state_resolver import resolve_historical_state
+
 from scripts.scene_packs.build_scene_pack import (
     DEFAULT_SCENE_ID,
     build_gap_scene_pack,
@@ -110,6 +112,39 @@ class SchemaContractTests(unittest.TestCase):
         self.assertTrue(pack["attribution"])
         self.assertTrue(pack["rights_notices"])
         self.assertFalse(pack["renderer_hints"]["asset_fallback_allowed"])
+
+
+    def test_current_project_resolution_stays_gap_until_real_review_gates_pass(self) -> None:
+        entity = read_json(ROOT / "data/entities/NN-SITE-BRIHADISVARA-THANJAVUR.json")
+        gap = read_json(ROOT / "data/historical-states/NN-GAP-BRIHADISVARA-001.json")
+        state_dir = ROOT / "data/historical-states"
+        candidates = [
+            read_json(path) for path in sorted(state_dir.glob("*.json"))
+            if path.name != "NN-GAP-BRIHADISVARA-001.json"
+        ]
+        evidence = load_evidence_records(ROOT / "data/evidence")
+        sources = load_source_registry(ROOT / "data/manifests/source-registry-v0.csv")
+        assets_dir = ROOT / "data/assets"
+        assets = {}
+        for path in sorted(assets_dir.glob("*.json")) if assets_dir.exists() else []:
+            asset = read_json(path)
+            assets[asset["id"]] = asset
+
+        result = resolve_historical_state(
+            "1000-01-01",
+            "1010-12-31",
+            entity,
+            candidates,
+            gap,
+            evidence,
+            sources,
+            assets,
+        )
+        self.assertEqual(result["resolution_status"], "GAP")
+        self.assertEqual(result["reason_code"], "ENTITY_NOT_VERIFIED")
+        self.assertEqual(result["state"]["state_kind"], "GAP")
+        self.assertEqual(result["state"]["uncertainty"]["code"], "NO_SUPPORTED_RECONSTRUCTION")
+
 
 
 if __name__ == "__main__":
