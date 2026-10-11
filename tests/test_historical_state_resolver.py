@@ -1,10 +1,17 @@
 from __future__ import annotations
 
 import copy
+import json
+import subprocess
+import sys
+import tempfile
 import unittest
+from pathlib import Path
 
 from scripts.scene_packs.state_resolver import resolve_historical_state
 from scripts.scene_packs.build_scene_pack import GAP_CODE, ScenePackError
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 ENTITY = {
@@ -177,6 +184,44 @@ class HistoricalStateResolverTests(unittest.TestCase):
         original = copy.deepcopy(GAP)
         resolve(states=[])
         self.assertEqual(GAP, original)
+
+
+    def test_evidence_without_locator_blocks_selection(self) -> None:
+        evidence = copy.deepcopy(EVIDENCE)
+        evidence["NN:evidence:test-001"]["source_locator"] = ""
+        result = resolve(evidence=evidence)
+        self.assertEqual(result["resolution_status"], "GAP")
+        self.assertIn("EVIDENCE_SOURCE_LOCATOR_MISSING:NN:evidence:test-001", result["rejected_candidates"][STATE["id"]])
+
+    def test_asset_without_named_clearance_basis_blocks_selection(self) -> None:
+        assets = copy.deepcopy(ASSETS)
+        assets["NN:asset:test-temple"]["license_id"] = ""
+        result = resolve(assets=assets)
+        self.assertEqual(result["resolution_status"], "GAP")
+        self.assertIn("ASSET_LICENSE_BASIS_MISSING:NN:asset:test-temple", result["rejected_candidates"][STATE["id"]])
+
+    def test_cli_returns_gap_report_for_current_unreviewed_entity(self) -> None:
+        script = ROOT / "scripts/scene_packs/resolve_historical_state.py"
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "resolution.json"
+            completed = subprocess.run(
+                [
+                    sys.executable, str(script),
+                    "--from", "1000-01-01",
+                    "--to", "1010-12-31",
+                    "--output", str(output),
+                ],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            report = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(report["resolution_status"], "GAP")
+            self.assertEqual(report["reason_code"], "ENTITY_NOT_VERIFIED")
+            self.assertEqual(report["resolved_state_kind"], "GAP")
+            self.assertEqual(report["state"]["uncertainty"]["code"], GAP_CODE)
+            self.assertIn("not a renderer-ready", report["note"])
 
 
 if __name__ == "__main__":
