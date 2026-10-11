@@ -28,7 +28,9 @@ data/
 
 ## Current executable slice
 
-The Brihadisvara identity record and an explicit `NO_SUPPORTED_RECONSTRUCTION` state are the first fixtures. The Python standard-library builder at `scripts/scene_packs/build_scene_pack.py` emits a deterministic GAP scene pack. It is intentionally GAP-only until there are reviewed historical states and a documented resolver. It will not add a historical model as a fallback.
+The Brihadisvara identity record now links one official-source identity assertion marked `SOURCE_LOCATED_REVIEW_PENDING`. That assertion is not a historical reconstruction claim. An explicit `NO_SUPPORTED_RECONSTRUCTION` state remains the only selectable state in v0.
+
+The Python standard-library builder at `scripts/scene_packs/build_scene_pack.py` emits deterministic GAP scene-pack JSON, includes resolvable entity/state evidence references, and carries source attribution and outstanding rights notices. It refuses missing evidence/source records, mismatched entities, and fallback visual assets.
 
 Run from the repository root:
 
