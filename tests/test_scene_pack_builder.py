@@ -33,6 +33,25 @@ STATE = {
         "message": "No reviewed historical reconstruction is currently available for the requested interval in the current project dataset.",
     },
 }
+EVIDENCE_ID = "NN:evidence:brh:component-001"
+EVIDENCE = {
+    "id": EVIDENCE_ID,
+    "subject_entity_id": ENTITY["id"],
+    "predicate": "is-component-of",
+    "source_id": "SRC-UNESCO-TNT",
+    "source_locator": "UNESCO World Heritage Centre, Great Living Chola Temples, Outstanding Universal Value / Brief synthesis.",
+    "verification_status": "SOURCE_LOCATED_REVIEW_PENDING",
+}
+SOURCE = {
+    "SRC-UNESCO-TNT": {
+        "source_id": "SRC-UNESCO-TNT",
+        "organization": "UNESCO World Heritage Centre",
+        "title": "Great Living Chola Temples",
+        "url": "https://whc.unesco.org/en/list/250",
+        "rights_status": "REVIEW_REQUIRED",
+        "attribution_required": "Yes",
+    }
+}
 
 
 class ScenePackBuilderTests(unittest.TestCase):
@@ -84,9 +103,35 @@ class ScenePackBuilderTests(unittest.TestCase):
         with self.assertRaisesRegex(ScenePackError, GAP_CODE):
             build_gap_scene_pack(ENTITY, state)
 
+    def test_entity_evidence_is_included_and_attributed_but_not_auto_approved(self) -> None:
+        entity = dict(ENTITY, evidence_refs=[EVIDENCE_ID])
+        pack = build_gap_scene_pack(entity, STATE, evidence_records={EVIDENCE_ID: EVIDENCE}, sources=SOURCE)
+        self.assertEqual(pack["evidence_refs"], [EVIDENCE_ID])
+        self.assertTrue(any("UNESCO World Heritage Centre" in item for item in pack["attribution"]))
+        self.assertTrue(any("rights status is REVIEW_REQUIRED" in item for item in pack["rights_notices"]))
+        self.assertFalse(pack["renderer_hints"]["historical_geometry"])
+
+    def test_rejects_missing_referenced_evidence(self) -> None:
+        entity = dict(ENTITY, evidence_refs=[EVIDENCE_ID])
+        with self.assertRaisesRegex(ScenePackError, "Referenced evidence record not found"):
+            build_gap_scene_pack(entity, STATE)
+
+    def test_rejects_unknown_evidence_source(self) -> None:
+        entity = dict(ENTITY, evidence_refs=[EVIDENCE_ID])
+        evidence = dict(EVIDENCE, source_id="SRC-NOT-REGISTERED")
+        with self.assertRaisesRegex(ScenePackError, "unknown source"):
+            build_gap_scene_pack(entity, STATE, evidence_records={EVIDENCE_ID: evidence}, sources=SOURCE)
+
+    def test_rejects_evidence_about_another_entity(self) -> None:
+        entity = dict(ENTITY, evidence_refs=[EVIDENCE_ID])
+        evidence = dict(EVIDENCE, subject_entity_id="NN:site:other")
+        with self.assertRaisesRegex(ScenePackError, "not about scene entity"):
+            build_gap_scene_pack(entity, STATE, evidence_records={EVIDENCE_ID: evidence}, sources=SOURCE)
+
     def test_same_inputs_produce_identical_objects_and_bytes(self) -> None:
-        first = build_gap_scene_pack(ENTITY, STATE, "1000-01-01", "1010-12-31")
-        second = build_gap_scene_pack(ENTITY, STATE, "1000-01-01", "1010-12-31")
+        entity = dict(ENTITY, evidence_refs=[EVIDENCE_ID])
+        first = build_gap_scene_pack(entity, STATE, "1000-01-01", "1010-12-31", evidence_records={EVIDENCE_ID: EVIDENCE}, sources=SOURCE)
+        second = build_gap_scene_pack(entity, STATE, "1000-01-01", "1010-12-31", evidence_records={EVIDENCE_ID: EVIDENCE}, sources=SOURCE)
         first_bytes = json.dumps(first, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
         second_bytes = json.dumps(second, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
         self.assertEqual(first, second)
@@ -108,6 +153,8 @@ class ScenePackBuilderTests(unittest.TestCase):
             payload = json.loads(output_path.read_text(encoding="utf-8"))
             self.assertEqual(payload["state_kind"], "GAP")
             self.assertEqual(payload["uncertainty"]["code"], GAP_CODE)
+            self.assertEqual(payload["evidence_refs"], [EVIDENCE_ID])
+            self.assertTrue(any("UNESCO World Heritage Centre" in item for item in payload["attribution"]))
             self.assertIn("asset_fallback_allowed", payload["renderer_hints"])
 
 
