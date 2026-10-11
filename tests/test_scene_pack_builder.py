@@ -7,6 +7,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from scripts.scene_packs.render_flat_viewer import ViewerRenderError, render_flat_html
+
 from scripts.scene_packs.build_scene_pack import (
     DEFAULT_SCENE_ID,
     GAP_CODE,
@@ -156,6 +158,46 @@ class ScenePackBuilderTests(unittest.TestCase):
             self.assertEqual(payload["evidence_refs"], [EVIDENCE_ID])
             self.assertTrue(any("UNESCO World Heritage Centre" in item for item in payload["attribution"]))
             self.assertIn("asset_fallback_allowed", payload["renderer_hints"])
+
+
+    def test_flat_viewer_renders_gap_and_source_review_notice(self) -> None:
+        entity = dict(ENTITY, evidence_refs=[EVIDENCE_ID])
+        pack = build_gap_scene_pack(entity, STATE, evidence_records={EVIDENCE_ID: EVIDENCE}, sources=SOURCE)
+        document = render_flat_html(pack, entity, {EVIDENCE_ID: EVIDENCE}, SOURCE)
+        self.assertIn('role="status"', document)
+        self.assertIn("Historical reconstruction unavailable", document)
+        self.assertIn("NO_SUPPORTED_RECONSTRUCTION", document)
+        self.assertIn("SOURCE_LOCATED_REVIEW_PENDING", document)
+        self.assertIn("UNESCO World Heritage Centre", document)
+        self.assertIn("REVIEW_REQUIRED", document)
+        self.assertIn("asset fallback is prohibited", document)
+        self.assertNotIn("<script", document.lower())
+
+    def test_flat_viewer_escapes_dynamic_markup(self) -> None:
+        entity = dict(ENTITY, canonical_name='<img src=x onerror="alert(1)">')
+        pack = build_gap_scene_pack(entity, STATE)
+        document = render_flat_html(pack, entity, {}, SOURCE)
+        self.assertIn("&lt;img src=x onerror=&quot;alert(1)&quot;&gt;", document)
+        self.assertNotIn("<img src=x", document)
+
+    def test_flat_viewer_rejects_unknown_evidence(self) -> None:
+        pack = build_gap_scene_pack(ENTITY, STATE)
+        pack["evidence_refs"] = ["NN:evidence:missing"]
+        with self.assertRaisesRegex(ViewerRenderError, "Referenced evidence record not found"):
+            render_flat_html(pack, ENTITY, {}, SOURCE)
+
+    def test_flat_viewer_rejects_unsupported_scene_state(self) -> None:
+        pack = build_gap_scene_pack(ENTITY, STATE)
+        pack["state_kind"] = "RECONSTRUCTED"
+        with self.assertRaisesRegex(ViewerRenderError, "only renders GAP"):
+            render_flat_html(pack, ENTITY, {}, SOURCE)
+
+    def test_flat_viewer_output_is_deterministic(self) -> None:
+        entity = dict(ENTITY, evidence_refs=[EVIDENCE_ID])
+        pack = build_gap_scene_pack(entity, STATE, evidence_records={EVIDENCE_ID: EVIDENCE}, sources=SOURCE)
+        first = render_flat_html(pack, entity, {EVIDENCE_ID: EVIDENCE}, SOURCE)
+        second = render_flat_html(pack, entity, {EVIDENCE_ID: EVIDENCE}, SOURCE)
+        self.assertEqual(first, second)
 
 
 if __name__ == "__main__":
