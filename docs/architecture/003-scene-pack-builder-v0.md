@@ -34,6 +34,10 @@ To generate an unbounded “no interval selected” gap fixture, omit both `--fr
 - `generated_at` is null rather than wall-clock time. The same inputs yield the same serialized scene pack.
 - No third-party imagery, meshes, raw data, or long source text is embedded.
 
+## Schema contract validation
+
+The existing Draft 2020-12 schemas are checked by automated tests in `tests/test_schema_contracts.py`. Install `requirements-dev.txt` before running the full suite; GitHub Actions uses the same dependency file and runs the same tests. Coverage includes the canonical site entity, source-linked evidence record, GAP state, committed fixture pack, and a freshly generated pack. This is separate from the runtime invariants in the builder and protects against silently drifting fixture shapes.
+
 ## Deliberate limitations
 
 - No React/Three.js renderer yet.
