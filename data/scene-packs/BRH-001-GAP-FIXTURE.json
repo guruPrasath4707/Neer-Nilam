@@ -1,5 +1,4 @@
 {
-  "$schema": "../schemas/scene-pack-v0.schema.json",
   "scene_pack_version": "0.1.0",
   "scene_id": "BRH-001-GAP-FIXTURE",
   "requested_interval": {
@@ -8,22 +7,31 @@
   },
   "resolved_state_id": "NN:state:brihadisvara:gap-001",
   "state_kind": "GAP",
-  "entities": ["NN:site:brihadisvara-thanjavur"],
+  "entities": [
+    "NN:site:brihadisvara-thanjavur"
+  ],
   "layers": [],
   "events": [],
   "evidence_refs": [],
   "asset_refs": [],
   "uncertainty": {
-    "code": "NO_SUPPORTED_RECONSTRUCTION"
+    "code": "NO_SUPPORTED_RECONSTRUCTION",
+    "message": "No reviewed historical reconstruction is currently available for the requested interval in the current project dataset."
   },
   "attribution": [],
-  "rights_notices": [],
-  "data_gaps": ["NN:state:brihadisvara:gap-001"],
+  "rights_notices": [
+    "Entity source/rights status is REVIEW_REQUIRED; this pack embeds no source media or third-party visual assets."
+  ],
+  "data_gaps": [
+    "NN:state:brihadisvara:gap-001"
+  ],
   "renderer_hints": {
     "flat": true,
     "peppers_ghost": true,
-    "relief_projection": true
+    "relief_projection": true,
+    "historical_geometry": false,
+    "asset_fallback_allowed": false
   },
-  "generated_at": "2026-10-08",
-  "generator_version": "fixture-0"
+  "generated_at": null,
+  "generator_version": "0.1.0"
 }
