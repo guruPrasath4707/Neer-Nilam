@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import csv
 import json
 import os
 import sys
@@ -23,6 +24,8 @@ GAP_CODE = "NO_SUPPORTED_RECONSTRUCTION"
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_ENTITY = ROOT / "data/entities/NN-SITE-BRIHADISVARA-THANJAVUR.json"
 DEFAULT_STATE = ROOT / "data/historical-states/NN-GAP-BRIHADISVARA-001.json"
+DEFAULT_EVIDENCE_DIR = ROOT / "data/evidence"
+DEFAULT_SOURCE_REGISTRY = ROOT / "data/manifests/source-registry-v0.csv"
 
 
 class ScenePackError(ValueError):
@@ -39,6 +42,40 @@ def _load_json(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ScenePackError(f"Expected a JSON object in {path}")
     return value
+
+
+def load_evidence_records(evidence_dir: Path) -> dict[str, dict[str, Any]]:
+    records: dict[str, dict[str, Any]] = {}
+    if not evidence_dir.exists():
+        return records
+    for path in sorted(evidence_dir.glob("*.json")):
+        record = _load_json(path)
+        record_id = record.get("id")
+        if not isinstance(record_id, str) or not record_id:
+            raise ScenePackError(f"Evidence record {path} has no non-empty id")
+        if record_id in records:
+            raise ScenePackError(f"Duplicate evidence id: {record_id}")
+        records[record_id] = record
+    return records
+
+
+def load_source_registry(path: Path) -> dict[str, dict[str, str]]:
+    try:
+        with path.open("r", encoding="utf-8-sig", newline="") as handle:
+            reader = csv.DictReader(handle)
+            if not reader.fieldnames or "source_id" not in reader.fieldnames:
+                raise ScenePackError(f"Source registry {path} must include a source_id column")
+            sources: dict[str, dict[str, str]] = {}
+            for row in reader:
+                source_id = (row.get("source_id") or "").strip()
+                if not source_id:
+                    continue
+                if source_id in sources:
+                    raise ScenePackError(f"Duplicate source id in registry: {source_id}")
+                sources[source_id] = {key: (value or "").strip() for key, value in row.items() if key}
+            return sources
+    except OSError as exc:
+        raise ScenePackError(f"Cannot read source registry {path}: {exc}") from exc
 
 
 def _validate_iso_date(value: str | None, name: str) -> str | None:
@@ -59,12 +96,14 @@ def build_gap_scene_pack(
     requested_from: str | None = None,
     requested_to: str | None = None,
     scene_id: str = DEFAULT_SCENE_ID,
+    evidence_records: dict[str, dict[str, Any]] | None = None,
+    sources: dict[str, dict[str, str]] | None = None,
 ) -> dict[str, Any]:
-    """Return a stable renderer-neutral GAP scene pack for the provided interval.
+    """Return a stable renderer-neutral GAP pack with linked entity evidence.
 
     This v0 intentionally refuses DOCUMENTED/RECONSTRUCTED/INTERPRETED/PROVISIONAL
     states. A separate reviewed-state selection policy is required before those can
-    be resolved. It also refuses assets on a GAP state to prevent visual fallbacks.
+    be resolved. A GAP state cannot reference assets, preventing visual fallbacks.
     """
     start = _validate_iso_date(requested_from, "requested_from")
     end = _validate_iso_date(requested_to, "requested_to")
@@ -93,13 +132,49 @@ def build_gap_scene_pack(
         raise ScenePackError("Unexpected verification status on GAP state")
 
     asset_refs = state.get("asset_refs", [])
-    evidence_refs = state.get("evidence_refs", [])
-    if not isinstance(asset_refs, list) or not all(isinstance(x, str) for x in asset_refs):
-        raise ScenePackError("state.asset_refs must be an array of strings")
+    state_evidence_refs = state.get("evidence_refs", [])
+    entity_evidence_refs = entity.get("evidence_refs", [])
+    for name, values in (("state.asset_refs", asset_refs), ("state.evidence_refs", state_evidence_refs), ("entity.evidence_refs", entity_evidence_refs)):
+        if not isinstance(values, list) or not all(isinstance(item, str) for item in values):
+            raise ScenePackError(f"{name} must be an array of strings")
     if asset_refs:
         raise ScenePackError("GAP states must not include visual assets or fallback assets")
-    if not isinstance(evidence_refs, list) or not all(isinstance(x, str) for x in evidence_refs):
-        raise ScenePackError("state.evidence_refs must be an array of strings")
+
+    evidence_ids = list(dict.fromkeys([*entity_evidence_refs, *state_evidence_refs]))
+    evidence_lookup = evidence_records or {}
+    source_lookup = sources or {}
+    attribution: list[str] = []
+    rights_notices: list[str] = []
+    for evidence_id in evidence_ids:
+        record = evidence_lookup.get(evidence_id)
+        if record is None:
+            raise ScenePackError(f"Referenced evidence record not found: {evidence_id}")
+        if record.get("id") != evidence_id:
+            raise ScenePackError(f"Evidence lookup key does not match record id: {evidence_id}")
+        if record.get("subject_entity_id") != entity_id:
+            raise ScenePackError(f"Evidence {evidence_id} is not about scene entity {entity_id}")
+        source_id = record.get("source_id")
+        source = source_lookup.get(source_id) if isinstance(source_id, str) else None
+        if source is None:
+            raise ScenePackError(f"Evidence {evidence_id} references unknown source: {source_id}")
+        locator = record.get("source_locator")
+        if not isinstance(locator, str) or not locator.strip():
+            raise ScenePackError(f"Evidence {evidence_id} requires an exact source_locator")
+        if source.get("attribution_required", "").casefold() in {"yes", "true", "required"}:
+            line = f"{source.get('organization', '').strip()} — {source.get('title', '').strip()}: {source.get('url', '').strip()}"
+            if line not in attribution:
+                attribution.append(line)
+        source_rights = source.get("rights_status", "REVIEW_REQUIRED")
+        if source_rights and source_rights.upper() not in {"CLEARED", "CC0", "PUBLIC_DOMAIN"}:
+            rights_notices.append(
+                f"Source {source_id} rights status is {source_rights}; factual reference only, no source media or page text embedded."
+            )
+
+    entity_rights = entity.get("rights_status", "REVIEW_REQUIRED")
+    if entity_rights != "CLEARED":
+        rights_notices.append(
+            f"Entity source/rights status is {entity_rights}; this pack embeds no source media or third-party visual assets."
+        )
 
     uncertainty = copy.deepcopy(state.get("uncertainty"))
     if not isinstance(uncertainty, dict):
@@ -111,13 +186,6 @@ def build_gap_scene_pack(
         "No reviewed historical reconstruction is currently available for the requested interval.",
     )
 
-    rights_status = entity.get("rights_status", "REVIEW_REQUIRED")
-    rights_notices: list[str] = []
-    if rights_status != "CLEARED":
-        rights_notices.append(
-            f"Entity source/rights status is {rights_status}; this pack embeds no source media or third-party visual assets."
-        )
-
     scene_pack = {
         "scene_pack_version": SCENE_PACK_VERSION,
         "scene_id": scene_id.strip(),
@@ -127,11 +195,11 @@ def build_gap_scene_pack(
         "entities": [entity_id],
         "layers": [],
         "events": [],
-        "evidence_refs": list(evidence_refs),
+        "evidence_refs": evidence_ids,
         "asset_refs": [],
         "uncertainty": uncertainty,
-        "attribution": [],
-        "rights_notices": rights_notices,
+        "attribution": attribution,
+        "rights_notices": list(dict.fromkeys(rights_notices)),
         "data_gaps": [state_id],
         "renderer_hints": {
             "flat": True,
@@ -151,11 +219,10 @@ def build_gap_scene_pack(
 def validate_scene_pack(pack: dict[str, Any]) -> None:
     """Validate runtime invariants that protect the v0 GAP contract."""
     required = {
-        "scene_pack_version", "scene_id", "requested_interval",
-        "resolved_state_id", "state_kind", "entities", "layers", "events",
-        "evidence_refs", "asset_refs", "uncertainty", "attribution",
-        "rights_notices", "data_gaps", "renderer_hints", "generated_at",
-        "generator_version",
+        "scene_pack_version", "scene_id", "requested_interval", "resolved_state_id",
+        "state_kind", "entities", "layers", "events", "evidence_refs", "asset_refs",
+        "uncertainty", "attribution", "rights_notices", "data_gaps", "renderer_hints",
+        "generated_at", "generator_version",
     }
     missing = required - set(pack)
     extra = set(pack) - required
@@ -194,6 +261,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--entity", type=Path, default=DEFAULT_ENTITY, help="Canonical entity JSON")
     parser.add_argument("--state", type=Path, default=DEFAULT_STATE, help="Historical-state JSON (v0: GAP only)")
+    parser.add_argument("--evidence-dir", type=Path, default=DEFAULT_EVIDENCE_DIR, help="Directory of evidence JSON records")
+    parser.add_argument("--source-registry", type=Path, default=DEFAULT_SOURCE_REGISTRY, help="Source registry CSV")
     parser.add_argument("--from", dest="requested_from", help="Requested start date, YYYY-MM-DD")
     parser.add_argument("--to", dest="requested_to", help="Requested end date, YYYY-MM-DD")
     parser.add_argument("--scene-id", default=DEFAULT_SCENE_ID, help="Stable scene identifier")
@@ -203,12 +272,16 @@ def main(argv: list[str] | None = None) -> int:
     try:
         entity = _load_json(args.entity)
         state = _load_json(args.state)
+        evidence = load_evidence_records(args.evidence_dir)
+        sources = load_source_registry(args.source_registry)
         pack = build_gap_scene_pack(
             entity,
             state,
             requested_from=args.requested_from,
             requested_to=args.requested_to,
             scene_id=args.scene_id,
+            evidence_records=evidence,
+            sources=sources,
         )
         _atomic_write_json(args.output, pack)
     except (ScenePackError, OSError) as exc:
@@ -216,6 +289,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     print(f"Wrote GAP scene pack: {args.output}")
     print(f"State: {pack['resolved_state_id']} ({GAP_CODE}); no historical model/assets substituted")
+    print(f"Linked source-backed identity assertions: {len(pack['evidence_refs'])}")
     return 0
 
 
