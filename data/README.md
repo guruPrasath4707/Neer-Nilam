@@ -28,15 +28,16 @@ data/
 
 ## Current executable slice
 
-The Brihadisvara identity record now links one official-source identity assertion marked `SOURCE_LOCATED_REVIEW_PENDING`. That assertion is not a historical reconstruction claim. An explicit `NO_SUPPORTED_RECONSTRUCTION` state remains the only selectable state in v0.
+The Brihadisvara identity record links one official-source identity assertion marked `SOURCE_LOCATED_REVIEW_PENDING`. This is an identity/context claim, not historical reconstruction evidence. The current scene state remains the explicit `NO_SUPPORTED_RECONSTRUCTION` GAP.
 
-The Python standard-library builder at `scripts/scene_packs/build_scene_pack.py` emits deterministic GAP scene-pack JSON, includes resolvable entity/state evidence references, and carries source attribution and outstanding rights notices. It refuses missing evidence/source records, mismatched entities, and fallback visual assets.
-
-Run from the repository root:
+Build the scene pack, then render it as a standalone flat evidence view (Python 3.10+, standard library only):
 
 ```powershell
 python -m unittest discover -s tests -v
-python scripts/scene_packs/build_scene_pack.py --from 1000-01-01 --to 1010-12-31 --output data/scene-packs/BRH-001-GAP-FIXTURE.json
+python scripts/scene_packs/build_scene_pack.py --output data/scene-packs/BRH-001-GAP-FIXTURE.json
+python scripts/scene_packs/render_flat_viewer.py --scene-pack data/scene-packs/BRH-001-GAP-FIXTURE.json --output prototypes/flat-viewer/BRH-001-GAP-FIXTURE.html
 ```
 
-No bulk source dataset is copied into this repository. Large/raw source files remain on the external data lake; only appropriate schemas, metadata, small fixtures, audit artifacts, and reproducible code belong here.
+The flat viewer shows the resolved state, requested time interval, linked source locator, review status, attribution and outstanding rights notice. It has no external JavaScript dependency, embeds no source media, escapes dynamic HTML text, and refuses non-GAP states or fallback visuals.
+
+No bulk source dataset is copied into this repository. Large/raw files remain on the external data lake; only appropriate schemas, metadata, small fixtures, audit artifacts, and reproducible code belong here.
