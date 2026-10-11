@@ -45,3 +45,17 @@ To generate an unbounded “no interval selected” gap fixture, omit both `--fr
 ## Next gate
 
 Add additional source-linked assertions only after source and use-rights review; implement reviewed-state selection that refuses ambiguity and still falls back to GAP when no eligible, reviewed state covers the requested interval. Do not enable historical rendering until review state, temporal interval, assets, sources, and rights gates all pass.
+
+
+## Flat-browser presentation client
+
+The companion `scripts/scene_packs/render_flat_viewer.py` generates a standalone, accessible HTML evidence view from the scene pack, entity, evidence JSON and source registry. It renders a prominent GAP notice, the evidence locator and review state, and attribution/rights notices. All dynamic text is HTML escaped; source links accept only HTTP(S) URLs; output is atomically written and deterministic. There is no JavaScript bundle or external asset dependency.
+
+Generate the view with:
+
+```powershell
+python scripts/scene_packs/build_scene_pack.py --output data/scene-packs/BRH-001-GAP-FIXTURE.json
+python scripts/scene_packs/render_flat_viewer.py --scene-pack data/scene-packs/BRH-001-GAP-FIXTURE.json --output prototypes/flat-viewer/BRH-001-GAP-FIXTURE.html
+```
+
+The viewer is a flat fallback/provenance inspection proof, not the final interactive GIS/3D application. It fails closed if the scene is not GAP-only, a referenced evidence/source record is missing, or fallback/historical geometry is enabled.
