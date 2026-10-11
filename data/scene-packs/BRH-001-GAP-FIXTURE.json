@@ -12,14 +12,19 @@
   ],
   "layers": [],
   "events": [],
-  "evidence_refs": [],
+  "evidence_refs": [
+    "NN:evidence:brh:component-001"
+  ],
   "asset_refs": [],
   "uncertainty": {
     "code": "NO_SUPPORTED_RECONSTRUCTION",
     "message": "No reviewed historical reconstruction is currently available for the requested interval in the current project dataset."
   },
-  "attribution": [],
+  "attribution": [
+    "UNESCO World Heritage Centre — Great Living Chola Temples: https://whc.unesco.org/en/list/250"
+  ],
   "rights_notices": [
+    "Source SRC-UNESCO-TNT rights status is REVIEW_REQUIRED; factual reference only, no source media or page text embedded.",
     "Entity source/rights status is REVIEW_REQUIRED; this pack embeds no source media or third-party visual assets."
   ],
   "data_gaps": [
