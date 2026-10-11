@@ -15,10 +15,13 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from scripts.scene_packs.build_scene_pack import ScenePackError, _load_json, load_evidence_records, load_source_registry
 from scripts.scene_packs.state_resolver import resolve_historical_state
 
-ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_ENTITY = ROOT / "data/entities/NN-SITE-BRIHADISVARA-THANJAVUR.json"
 DEFAULT_STATE_DIR = ROOT / "data/historical-states"
 DEFAULT_GAP_STATE = ROOT / "data/historical-states/NN-GAP-BRIHADISVARA-001.json"
