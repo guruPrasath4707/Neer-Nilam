@@ -17,7 +17,7 @@ This directory is the working boundary for project-controlled dataset manifests,
 ```text
 data/
   manifests/       source and acquisition registries
-  schemas/         entity, evidence, historical-state, and scene-pack contracts
+  schemas/         entity, evidence, historical-state, asset, and scene-pack contracts
   entities/        canonical entity records
   evidence/        source-linked assertions
   historical-states/ reviewed states and explicit GAP records
@@ -35,9 +35,12 @@ Build the scene pack, then render it as a standalone flat evidence view (Python 
 ```powershell
 python -m pip install -r requirements-dev.txt
 python -m unittest discover -s tests -v
+python scripts/scene_packs/resolve_historical_state.py --from 1000-01-01 --to 1010-12-31 --output reports/BRH-001-resolution.json
 python scripts/scene_packs/build_scene_pack.py --output data/scene-packs/BRH-001-GAP-FIXTURE.json
 python scripts/scene_packs/render_flat_viewer.py --scene-pack data/scene-packs/BRH-001-GAP-FIXTURE.json --output prototypes/flat-viewer/BRH-001-GAP-FIXTURE.html
 ```
+
+The resolver at `scripts/scene_packs/resolve_historical_state.py` produces an auditable JSON decision report. It selects a supported state only when the site entity, state, full time range, evidence records, source permissions, and asset rights/identity checks all pass; zero or multiple eligible states return the explicit GAP. Its current run should return GAP because the real site identity record is still unreviewed and there are no cleared production assets.
 
 The flat viewer shows the resolved state, requested time interval, linked source locator, review status, attribution and outstanding rights notice. Test suite includes automated Draft 2020-12 JSON Schema checks for the core fixtures and generated pack. It has no external JavaScript dependency, embeds no source media, escapes dynamic HTML text, and refuses non-GAP states or fallback visuals.
 
