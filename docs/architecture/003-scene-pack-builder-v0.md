@@ -63,3 +63,22 @@ python scripts/scene_packs/render_flat_viewer.py --scene-pack data/scene-packs/B
 ```
 
 The viewer is a flat fallback/provenance inspection proof, not the final interactive GIS/3D application. It fails closed if the scene is not GAP-only, a referenced evidence/source record is missing, or fallback/historical geometry is enabled.
+
+
+## Historical-state resolution gate
+
+`scripts/scene_packs/state_resolver.py` and its report CLI `scripts/scene_packs/resolve_historical_state.py` implement a conservative first resolver. The CLI requires both requested interval endpoints and writes a decision report, not a supported renderer pack.
+
+A state is eligible only when all of these checks pass:
+- the canonical entity is marked `VERIFIED`;
+- the candidate is `DOCUMENTED`, `RECONSTRUCTED`, or `INTERPRETED`, with `verification_status=VERIFIED`;
+- its bounded valid interval fully covers the requested interval;
+- it links evidence records for the same entity, each marked `VERIFIED`, with a reviewer, verification date, source locator, and an interval covering the request;
+- each evidence source is `REVIEWED` or `RIGHTS_CLEARED`, and explicitly permits redistribution and commercial use;
+- at least one referenced scene asset exists, has a valid SHA-256, reviewer/date, a named licence basis, attribution, `verification_status=VERIFIED`, `rights_status=CLEARED`, and an eligible source record.
+
+No eligible state returns the explicit GAP with a reason code; multiple eligible states return GAP with `AMBIGUOUS_ELIGIBLE_STATES`. Candidate order is never used to choose between competing states. `PROVISIONAL` is not render-eligible. This is deliberately conservative and the rights flags must only be set after item-specific review; it is not a legal conclusion.
+
+The asset metadata contract is `data/schemas/asset-v0.schema.json`; registration and clearance expectations are documented in `data/assets/README.md`. The current repository has no production asset registered and the canonical entity is still unreviewed, so the CLI should report GAP. Synthetic test records exercise positive selection without being added as project evidence or production assets.
+
+The selector currently produces a resolution report only. The existing scene-pack builder and flat viewer remain GAP-only; connecting a selected supported state to a renderable scene pack is a separate gate and is not implied by a `SELECTED` report.
