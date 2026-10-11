@@ -56,6 +56,43 @@ class SchemaContractTests(unittest.TestCase):
         pack = read_json(ROOT / "data/scene-packs/BRH-001-GAP-FIXTURE.json")
         assert_valid_schema(self, pack, "scene-pack-v0.schema.json")
 
+    def test_asset_schema_accepts_explicitly_cleared_hash_identified_asset(self) -> None:
+        asset = {
+            "id": "NN:asset:test-cleared",
+            "asset_type": "TEST_ONLY",
+            "sha256": "a" * 64,
+            "source_id": "SRC-TEST",
+            "source_locator": "Synthetic schema test only",
+            "license_id": "TEST_FIXTURE",
+            "rights_status": "CLEARED",
+            "verification_status": "VERIFIED",
+            "verified_by": "Schema test reviewer",
+            "verified_at": "2026-10-11",
+            "attribution": "Synthetic test asset; not for production use.",
+            "file_path": None,
+            "mime_type": None,
+            "transformations": [],
+            "notes": "Fixture for schema validation only.",
+        }
+        assert_valid_schema(self, asset, "asset-v0.schema.json")
+
+    def test_asset_schema_rejects_malformed_sha256(self) -> None:
+        asset = {
+            "id": "NN:asset:test-cleared",
+            "asset_type": "TEST_ONLY",
+            "sha256": "not-a-hash",
+            "source_id": "SRC-TEST",
+            "license_id": "TEST_FIXTURE",
+            "rights_status": "CLEARED",
+            "verification_status": "VERIFIED",
+            "verified_by": "Schema test reviewer",
+            "verified_at": "2026-10-11",
+            "attribution": "Synthetic test asset; not for production use.",
+        }
+        schema = read_json(SCHEMAS / "asset-v0.schema.json")
+        errors = list(Draft202012Validator(schema).iter_errors(asset))
+        self.assertTrue(any(list(error.absolute_path) == ["sha256"] for error in errors))
+
     def test_generated_pack_conforms_to_schema_and_keeps_evidence_trace(self) -> None:
         entity = read_json(ROOT / "data/entities/NN-SITE-BRIHADISVARA-THANJAVUR.json")
         state = read_json(ROOT / "data/historical-states/NN-GAP-BRIHADISVARA-001.json")
