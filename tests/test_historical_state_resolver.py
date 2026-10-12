@@ -60,6 +60,7 @@ SOURCES = {
     "SRC-TEST": {
         "source_id": "SRC-TEST",
         "status": "RIGHTS_CLEARED",
+        "rights_status": "CLEARED",
         "redistribution_allowed": "Yes",
         "commercial_use": "Yes",
         "attribution_required": "Yes",
@@ -192,6 +193,71 @@ class HistoricalStateResolverTests(unittest.TestCase):
         result = resolve(evidence=evidence)
         self.assertEqual(result["resolution_status"], "GAP")
         self.assertIn("EVIDENCE_SOURCE_LOCATOR_MISSING:NN:evidence:test-001", result["rejected_candidates"][STATE["id"]])
+
+
+    def test_source_not_reviewed_blocks_selection_even_when_permissions_are_yes(self) -> None:
+        sources = copy.deepcopy(SOURCES)
+        sources["SRC-TEST"]["status"] = "READY_TO_REVIEW"
+        result = resolve(sources=sources)
+        self.assertEqual(result["resolution_status"], "GAP")
+        self.assertIn("SOURCE_RIGHTS_OR_REVIEW_GATE_FAILED:SRC-TEST", result["rejected_candidates"][STATE["id"]])
+
+    def test_unresolved_rights_label_blocks_despite_cleared_status(self) -> None:
+        sources = copy.deepcopy(SOURCES)
+        sources["SRC-TEST"]["status"] = "RIGHTS_CLEARED"
+        sources["SRC-TEST"]["rights_status"] = "LICENSE_DISCREPANCY_REVIEW"
+        result = resolve(sources=sources)
+        self.assertEqual(result["resolution_status"], "GAP")
+        self.assertIn("SOURCE_RIGHTS_OR_REVIEW_GATE_FAILED:SRC-TEST", result["rejected_candidates"][STATE["id"]])
+
+    def test_source_registry_key_and_record_id_must_match(self) -> None:
+        sources = copy.deepcopy(SOURCES)
+        sources["SRC-TEST"]["source_id"] = "SRC-OTHER"
+        result = resolve(sources=sources)
+        self.assertEqual(result["resolution_status"], "GAP")
+        self.assertIn("SOURCE_RIGHTS_OR_REVIEW_GATE_FAILED:SRC-TEST", result["rejected_candidates"][STATE["id"]])
+
+    def test_evidence_that_only_overlaps_request_is_rejected(self) -> None:
+        evidence = copy.deepcopy(EVIDENCE)
+        evidence["NN:evidence:test-001"]["valid_from"] = "1025-01-01"
+        evidence["NN:evidence:test-001"]["valid_to"] = "1100-12-31"
+        result = resolve(evidence=evidence, start="1020-01-01", end="1030-12-31")
+        self.assertEqual(result["resolution_status"], "GAP")
+        self.assertIn("EVIDENCE_DOES_NOT_COVER_REQUEST:NN:evidence:test-001", result["rejected_candidates"][STATE["id"]])
+
+    def test_adjacent_historical_era_is_not_substituted(self) -> None:
+        nearby = copy.deepcopy(STATE)
+        nearby["valid_from"] = "0900-01-01"
+        nearby["valid_to"] = "1019-12-31"
+        result = resolve(states=[nearby], start="1020-01-01", end="1030-12-31")
+        self.assertEqual(result["resolution_status"], "GAP")
+        self.assertEqual(result["reason_code"], "NO_ELIGIBLE_STATE_COVERS_REQUEST")
+        self.assertEqual(result["state"]["state_kind"], "GAP")
+        self.assertIn("STATE_DOES_NOT_COVER_REQUEST", result["rejected_candidates"][nearby["id"]])
+
+    def test_malformed_evidence_interval_fails_closed(self) -> None:
+        evidence = copy.deepcopy(EVIDENCE)
+        evidence["NN:evidence:test-001"]["valid_from"] = "circa-1000"
+        result = resolve(evidence=evidence)
+        self.assertEqual(result["resolution_status"], "GAP")
+        self.assertIn("EVIDENCE_DOES_NOT_COVER_REQUEST:NN:evidence:test-001", result["rejected_candidates"][STATE["id"]])
+
+    def test_invalid_evidence_verification_date_fails_closed(self) -> None:
+        evidence = copy.deepcopy(EVIDENCE)
+        evidence["NN:evidence:test-001"]["verified_at"] = "2026-02-30"
+        result = resolve(evidence=evidence)
+        self.assertEqual(result["resolution_status"], "GAP")
+        self.assertIn("EVIDENCE_VERIFICATION_DATE_INVALID:NN:evidence:test-001", result["rejected_candidates"][STATE["id"]])
+
+    def test_reversed_candidate_state_interval_fails_closed(self) -> None:
+        candidate = copy.deepcopy(STATE)
+        candidate["valid_from"] = "1030-01-01"
+        candidate["valid_to"] = "1020-12-31"
+        result = resolve(states=[candidate])
+        self.assertEqual(result["resolution_status"], "GAP")
+        reasons = result["rejected_candidates"][candidate["id"]]
+        self.assertIn("STATE_INTERVAL_INVALID", reasons)
+        self.assertIn("STATE_DOES_NOT_COVER_REQUEST", reasons)
 
     def test_asset_without_named_clearance_basis_blocks_selection(self) -> None:
         assets = copy.deepcopy(ASSETS)

@@ -36,12 +36,33 @@ def _covers_interval(
     return start <= requested_from and end >= requested_to
 
 
-def _source_is_eligible(source: dict[str, Any] | None) -> bool:
+def _source_is_eligible(
+    source: dict[str, Any] | None,
+    expected_source_id: str | None = None,
+) -> bool:
     if not source:
         return False
+    if expected_source_id is not None and str(source.get("source_id", "")).strip() != expected_source_id:
+        return False
+
     status = str(source.get("status", "")).strip().upper()
     if status not in APPROVED_SOURCE_STATUSES:
         return False
+
+    rights_status = str(source.get("rights_status", "")).strip()
+    if not rights_status:
+        return False
+    normalized_rights = re.sub(r"[^a-z0-9]+", " ", rights_status.casefold()).strip()
+    rights_tokens = set(normalized_rights.split())
+    blocked_rights_tokens = {
+        "review", "hold", "discrepancy", "unknown", "unverified",
+        "pending", "required", "restricted", "unresolved", "provisional", "nc",
+    }
+    if rights_tokens & blocked_rights_tokens:
+        return False
+    if re.search(r"\bnon\s*commercial\b|\ball\s*rights\s*reserved\b|\bno\s*redistribution\b", normalized_rights):
+        return False
+
     if str(source.get("redistribution_allowed", "")).strip().casefold() not in APPROVED_YES:
         return False
     if str(source.get("commercial_use", "")).strip().casefold() not in APPROVED_YES:
@@ -111,7 +132,7 @@ def _candidate_reasons(
             reasons.append(f"EVIDENCE_DOES_NOT_COVER_REQUEST:{evidence_id}")
         source_id = record.get("source_id")
         source = sources.get(source_id) if isinstance(source_id, str) else None
-        if not _source_is_eligible(source):
+        if not _source_is_eligible(source, source_id):
             reasons.append(f"SOURCE_RIGHTS_OR_REVIEW_GATE_FAILED:{source_id}")
 
     asset_ids = state.get("asset_refs")
@@ -142,7 +163,7 @@ def _candidate_reasons(
             reasons.append(f"ASSET_SHA256_INVALID:{asset_id}")
         source_id = asset.get("source_id")
         source = sources.get(source_id) if isinstance(source_id, str) else None
-        if not _source_is_eligible(source):
+        if not _source_is_eligible(source, source_id):
             reasons.append(f"ASSET_SOURCE_RIGHTS_OR_REVIEW_GATE_FAILED:{source_id}")
 
     return list(dict.fromkeys(reasons))

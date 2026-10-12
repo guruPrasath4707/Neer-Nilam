@@ -82,3 +82,10 @@ No eligible state returns the explicit GAP with a reason code; multiple eligible
 The asset metadata contract is `data/schemas/asset-v0.schema.json`; registration and clearance expectations are documented in `data/assets/README.md`. The current repository has no production asset registered and the canonical entity is still unreviewed, so the CLI should report GAP. Synthetic test records exercise positive selection without being added as project evidence or production assets.
 
 The selector currently produces a resolution report only. The existing scene-pack builder and flat viewer remain GAP-only; connecting a selected supported state to a renderable scene pack is a separate gate and is not implied by a `SELECTED` report.
+
+
+## Source-rights and temporal contract hardening — 2026-10-12
+
+The resolver treats the source registry identity and rights label as separate gates: the dictionary key must match the source record's own `source_id`, the source must be `REVIEWED` or `RIGHTS_CLEARED`, redistribution and commercial use must both be explicitly affirmative, and `rights_status` must be populated without review/hold/discrepancy/unknown/pending/restricted or non-commercial markers. A self-contradictory row such as `status=RIGHTS_CLEARED` with `rights_status=LICENSE_DISCREPANCY_REVIEW` remains ineligible. This is a conservative interpretation of recorded fields, not an external legal determination.
+
+Regression tests cover sources still in review despite optimistic permission flags, contradictory rights labels, source-ID mismatch, evidence that overlaps but does not span the full requested interval, malformed evidence dates, a reversed state interval, and an adjacent historical era that must remain GAP. Synthetic fixtures remain test-only.
