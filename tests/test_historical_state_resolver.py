@@ -210,6 +210,15 @@ class HistoricalStateResolverTests(unittest.TestCase):
         self.assertEqual(result["resolution_status"], "GAP")
         self.assertIn("SOURCE_RIGHTS_OR_REVIEW_GATE_FAILED:SRC-TEST", result["rejected_candidates"][STATE["id"]])
 
+    def test_missing_or_noncommercial_rights_label_blocks_eligibility(self) -> None:
+        for rights_status in ("", "CC BY-NC 4.0"):
+            with self.subTest(rights_status=rights_status):
+                sources = copy.deepcopy(SOURCES)
+                sources["SRC-TEST"]["rights_status"] = rights_status
+                result = resolve(sources=sources)
+                self.assertEqual(result["resolution_status"], "GAP")
+                self.assertIn("SOURCE_RIGHTS_OR_REVIEW_GATE_FAILED:SRC-TEST", result["rejected_candidates"][STATE["id"]])
+
     def test_source_registry_key_and_record_id_must_match(self) -> None:
         sources = copy.deepcopy(SOURCES)
         sources["SRC-TEST"]["source_id"] = "SRC-OTHER"
