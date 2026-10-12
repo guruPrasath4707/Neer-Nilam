@@ -254,5 +254,62 @@ class SchemaContractTests(unittest.TestCase):
 
 
 
+
+    def test_real_unreviewed_site_evidence_and_source_block_synthetic_candidate(self) -> None:
+        # Negative integration test only: the candidate below is synthetic and must
+        # never be registered as a real historical state or asset.
+        entity = read_json(ROOT / "data/entities/NN-SITE-BRIHADISVARA-THANJAVUR.json")
+        entity["verification_status"] = "VERIFIED"
+        gap = read_json(ROOT / "data/historical-states/NN-GAP-BRIHADISVARA-001.json")
+        evidence = load_evidence_records(ROOT / "data/evidence")
+        sources = load_source_registry(ROOT / "data/manifests/source-registry-v0.csv")
+
+        synthetic_state_id = "NN:state:synthetic-negative-test-only"
+        synthetic_asset_id = "NN:asset:synthetic-negative-test-only"
+        candidate = {
+            "id": synthetic_state_id,
+            "entity_id": entity["id"],
+            "label": "SYNTHETIC NEGATIVE TEST ONLY — not historical evidence",
+            "state_kind": "DOCUMENTED",
+            "verification_status": "VERIFIED",
+            "valid_from": "1000-01-01",
+            "valid_to": "1010-12-31",
+            "evidence_refs": ["NN:evidence:brh:component-001"],
+            "asset_refs": [synthetic_asset_id],
+        }
+        assets = {
+            synthetic_asset_id: {
+                "id": synthetic_asset_id,
+                "asset_type": "TEST_ONLY",
+                "sha256": "a" * 64,
+                "source_id": "SRC-UNESCO-TNT",
+                "license_id": "TEST_FIXTURE_ONLY",
+                "rights_status": "CLEARED",
+                "verification_status": "VERIFIED",
+                "verified_by": "Automated test",
+                "verified_at": "2026-10-12",
+                "attribution": "Synthetic test only; not a real asset.",
+            }
+        }
+
+        result = resolve_historical_state(
+            "1000-01-01",
+            "1010-12-31",
+            entity,
+            [candidate],
+            gap,
+            evidence,
+            sources,
+            assets,
+        )
+        self.assertEqual(result["resolution_status"], "GAP")
+        self.assertEqual(result["state"]["state_kind"], "GAP")
+        reasons = result["rejected_candidates"][synthetic_state_id]
+        self.assertIn("EVIDENCE_NOT_VERIFIED:NN:evidence:brh:component-001", reasons)
+        self.assertIn("EVIDENCE_VERIFICATION_DATE_MISSING:NN:evidence:brh:component-001", reasons)
+        self.assertIn("EVIDENCE_DOES_NOT_COVER_REQUEST:NN:evidence:brh:component-001", reasons)
+        self.assertIn("SOURCE_RIGHTS_OR_REVIEW_GATE_FAILED:SRC-UNESCO-TNT", reasons)
+        self.assertIn("ASSET_SOURCE_RIGHTS_OR_REVIEW_GATE_FAILED:SRC-UNESCO-TNT", reasons)
+
 if __name__ == "__main__":
     unittest.main()
