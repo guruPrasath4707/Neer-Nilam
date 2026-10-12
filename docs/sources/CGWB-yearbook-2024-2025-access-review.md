@@ -45,3 +45,14 @@ This is a modern groundwater observation source. It may provide contemporary env
 - Local PDF acquisition: **NOT ACQUIRED**
 - PDF content validation: **PENDING**
 - Rights/redistribution determination: **PENDING**
+
+
+## Follow-up lookup — 2026-10-12
+
+A fresh search-index result from the official CGWB publications repository reconfirms the exact listing title **“Groundwater Year Book, Tamilnadu UT of Puducherry (2024 - 2025)”**, year of issue 2026, state Tamil Nadu, and a district listing that includes Thanjavur. The official state-filtered results also list the 2023–2024 Ground Water Year Book as a separate older item. These are catalogue metadata observations only; a download counter and a visible “Download” label are not evidence that a valid PDF was retrieved.
+
+An automated direct-open attempt against the official publication-detail page returned **502 Bad Gateway** in this check. The search-index result did not expose a verified final PDF URL or PDF bytes. This does not establish what a normal browser session on the operator's Windows machine will receive. No file was acquired, validated, moved from quarantine, or registered. Next step remains a normal browser click on the exact 2024–2025 catalogue item's Download control with DevTools Network capture enabled.
+
+Reference URLs:
+- Official record: https://cgwb.gov.in/cgwbpnm/public/publication-detail/2023
+- Official Tamil Nadu yearbook search: https://cgwb.gov.in/cgwbpnm/search?cat_id=4&search=search&state_id=33&type=2
