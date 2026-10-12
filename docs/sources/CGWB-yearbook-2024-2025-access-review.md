@@ -56,3 +56,16 @@ An automated direct-open attempt against the official publication-detail page re
 Reference URLs:
 - Official record: https://cgwb.gov.in/cgwbpnm/public/publication-detail/2023
 - Official Tamil Nadu yearbook search: https://cgwb.gov.in/cgwbpnm/search?cat_id=4&search=search&state_id=33&type=2
+
+
+## Follow-up catalogue check — 2026-10-13
+
+A fresh public search-index check still lists **“Groundwater Year Book, Tamilnadu UT of Puducherry (2024 - 2025)”** in the official CGWB publications repository. The record continues to identify Tamil Nadu and includes Thanjavur in its district metadata. The official state-filtered result also displays this 2024–2025 yearbook separately from the older 2023–2024 edition. These observations reconfirm catalogue discovery only.
+
+A direct open of the official publication-detail URL again returned **502 Bad Gateway** through the automated page-fetch path. No verified final PDF download URL, response bytes, or completed browser download were obtained. Search snippets expose the listing and a Download label, but not the actual downloadable PDF resource. No local file, PDF signature, page count, title page, content coverage or SHA-256 was examined by this recheck.
+
+Disposition remains **NOT ACQUIRED / PENDING**. Do not create a checksum/manifest row for an unacquired PDF, promote quarantined error payloads, or treat Thanjavur's presence in catalogue metadata as proof that the report contains pilot-relevant well observations. The next evidence-bearing step remains a normal browser click on the exact item's Download control with DevTools Network capture enabled.
+
+Official links:
+- https://cgwb.gov.in/cgwbpnm/public/publication-detail/2023
+- https://cgwb.gov.in/cgwbpnm/search?cat_id=4&search=search&state_id=33&type=2
