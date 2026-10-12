@@ -8,7 +8,7 @@
     "id": {"type": "string"},
     "assertion_text": {"type": ["string", "null"]},
     "subject_entity_id": {"type": "string"},
-    "predicate": {"type": "string"},
+    "predicate": {"type": "string", "minLength": 1},
     "object_entity_id": {"type": ["string", "null"]},
     "value": {"type": ["string", "number", "boolean", "null"]},
     "source_id": {"type": "string"},
@@ -37,7 +37,25 @@
           "verified_at": { "type": "string", "format": "date" },
           "valid_from": { "type": "string", "format": "date" },
           "valid_to": { "type": "string", "format": "date" }
-        }
+        },
+        "anyOf": [
+          {
+            "required": ["assertion_text"],
+            "properties": { "assertion_text": { "type": "string", "minLength": 1 } }
+          },
+          {
+            "required": ["object_entity_id"],
+            "properties": { "object_entity_id": { "type": "string", "minLength": 1 } }
+          },
+          {
+            "required": ["value"],
+            "properties": { "value": { "type": "string", "minLength": 1 } }
+          },
+          {
+            "required": ["value"],
+            "properties": { "value": { "type": ["number", "boolean"] } }
+          }
+        ]
       }
     }
   ],

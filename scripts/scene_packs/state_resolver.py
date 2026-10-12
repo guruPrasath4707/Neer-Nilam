@@ -113,6 +113,19 @@ def _candidate_reasons(
             reasons.append(f"EVIDENCE_ENTITY_MISMATCH:{evidence_id}")
         if record.get("verification_status") != "VERIFIED":
             reasons.append(f"EVIDENCE_NOT_VERIFIED:{evidence_id}")
+        predicate = record.get("predicate")
+        if not isinstance(predicate, str) or not predicate.strip():
+            reasons.append(f"EVIDENCE_PREDICATE_MISSING:{evidence_id}")
+        assertion_text = record.get("assertion_text")
+        has_assertion = isinstance(assertion_text, str) and bool(assertion_text.strip())
+        object_entity_id = record.get("object_entity_id")
+        has_object = isinstance(object_entity_id, str) and bool(object_entity_id.strip())
+        claim_value = record.get("value")
+        has_value = claim_value is not None and (
+            not isinstance(claim_value, str) or bool(claim_value.strip())
+        )
+        if not (has_assertion or has_object or has_value):
+            reasons.append(f"EVIDENCE_CLAIM_CONTENT_MISSING:{evidence_id}")
         if not isinstance(record.get("source_locator"), str) or not record["source_locator"].strip():
             reasons.append(f"EVIDENCE_SOURCE_LOCATOR_MISSING:{evidence_id}")
         if not str(record.get("reviewer", "")).strip():

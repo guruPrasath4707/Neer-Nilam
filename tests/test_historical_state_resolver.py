@@ -47,6 +47,8 @@ EVIDENCE = {
     "NN:evidence:test-001": {
         "id": "NN:evidence:test-001",
         "subject_entity_id": ENTITY["id"],
+        "predicate": "tests-only-predicate",
+        "assertion_text": "Synthetic evidence claim; not project evidence.",
         "source_id": "SRC-TEST",
         "source_locator": "Synthetic test fixture locator only",
         "valid_from": "1000-01-01",
@@ -194,6 +196,32 @@ class HistoricalStateResolverTests(unittest.TestCase):
         self.assertEqual(result["resolution_status"], "GAP")
         self.assertIn("EVIDENCE_SOURCE_LOCATOR_MISSING:NN:evidence:test-001", result["rejected_candidates"][STATE["id"]])
 
+
+
+    def test_verified_evidence_without_claim_content_blocks_selection(self) -> None:
+        evidence = copy.deepcopy(EVIDENCE)
+        record = evidence["NN:evidence:test-001"]
+        record.pop("assertion_text", None)
+        record.pop("value", None)
+        record.pop("object_entity_id", None)
+        result = resolve(evidence=evidence)
+        self.assertEqual(result["resolution_status"], "GAP")
+        self.assertIn("EVIDENCE_CLAIM_CONTENT_MISSING:NN:evidence:test-001", result["rejected_candidates"][STATE["id"]])
+
+    def test_verified_evidence_with_blank_predicate_blocks_selection(self) -> None:
+        evidence = copy.deepcopy(EVIDENCE)
+        evidence["NN:evidence:test-001"]["predicate"] = "  "
+        result = resolve(evidence=evidence)
+        self.assertEqual(result["resolution_status"], "GAP")
+        self.assertIn("EVIDENCE_PREDICATE_MISSING:NN:evidence:test-001", result["rejected_candidates"][STATE["id"]])
+
+    def test_structured_value_can_support_claim_without_redundant_assertion_text(self) -> None:
+        evidence = copy.deepcopy(EVIDENCE)
+        record = evidence["NN:evidence:test-001"]
+        record.pop("assertion_text", None)
+        record["value"] = "Synthetic structured value; not project evidence."
+        result = resolve(evidence=evidence)
+        self.assertEqual(result["resolution_status"], "SELECTED")
 
     def test_source_not_reviewed_blocks_selection_even_when_permissions_are_yes(self) -> None:
         sources = copy.deepcopy(SOURCES)
