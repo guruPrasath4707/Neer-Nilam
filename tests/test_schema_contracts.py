@@ -28,7 +28,10 @@ def assert_valid_schema(test: unittest.TestCase, instance: dict, schema_name: st
     schema = read_json(SCHEMAS / schema_name)
     Draft202012Validator.check_schema(schema)
     errors = sorted(
-        Draft202012Validator(schema).iter_errors(instance),
+        Draft202012Validator(
+            schema,
+            format_checker=Draft202012Validator.FORMAT_CHECKER,
+        ).iter_errors(instance),
         key=lambda error: list(map(str, error.absolute_path)),
     )
     test.assertEqual(
@@ -92,7 +95,10 @@ class SchemaContractTests(unittest.TestCase):
             "attribution": "Synthetic test asset; not for production use.",
         }
         schema = read_json(SCHEMAS / "asset-v0.schema.json")
-        errors = list(Draft202012Validator(schema).iter_errors(asset))
+        errors = list(Draft202012Validator(
+            schema,
+            format_checker=Draft202012Validator.FORMAT_CHECKER,
+        ).iter_errors(asset))
         self.assertTrue(any(list(error.absolute_path) == ["sha256"] for error in errors))
 
     def test_generated_pack_conforms_to_schema_and_keeps_evidence_trace(self) -> None:
@@ -113,6 +119,90 @@ class SchemaContractTests(unittest.TestCase):
         self.assertTrue(pack["rights_notices"])
         self.assertFalse(pack["renderer_hints"]["asset_fallback_allowed"])
 
+
+
+    def test_entity_schema_rejects_impossible_validity_date(self) -> None:
+        entity = read_json(ROOT / "data/entities/NN-SITE-BRIHADISVARA-THANJAVUR.json")
+        entity["valid_from"] = "2026-02-30"
+        schema = read_json(SCHEMAS / "entity-v0.schema.json")
+        errors = list(Draft202012Validator(
+            schema, format_checker=Draft202012Validator.FORMAT_CHECKER
+        ).iter_errors(entity))
+        self.assertTrue(any(list(error.absolute_path) == ["valid_from"] for error in errors))
+
+    def test_evidence_schema_rejects_impossible_calendar_date(self) -> None:
+        evidence = read_json(ROOT / "data/evidence/NN-EVID-BRH-COMPONENT-001.json")
+        evidence["valid_from"] = "2026-02-30"
+        schema = read_json(SCHEMAS / "evidence-v0.schema.json")
+        errors = list(Draft202012Validator(
+            schema, format_checker=Draft202012Validator.FORMAT_CHECKER
+        ).iter_errors(evidence))
+        self.assertTrue(any(list(error.absolute_path) == ["valid_from"] for error in errors))
+
+    def test_verified_evidence_requires_review_and_full_date_coverage(self) -> None:
+        evidence = read_json(ROOT / "data/evidence/NN-EVID-BRH-COMPONENT-001.json")
+        evidence["verification_status"] = "VERIFIED"
+        schema = read_json(SCHEMAS / "evidence-v0.schema.json")
+        errors = list(Draft202012Validator(
+            schema, format_checker=Draft202012Validator.FORMAT_CHECKER
+        ).iter_errors(evidence))
+        paths = {tuple(error.absolute_path) for error in errors}
+        self.assertIn(("reviewer",), paths)
+        self.assertIn(("verified_at",), paths)
+        self.assertIn(("valid_from",), paths)
+        self.assertIn(("valid_to",), paths)
+
+    def test_historical_state_schema_rejects_impossible_validity_date(self) -> None:
+        state = read_json(ROOT / "data/historical-states/NN-GAP-BRIHADISVARA-001.json")
+        state["valid_from"] = "2026-02-30"
+        schema = read_json(SCHEMAS / "historical-state-v0.schema.json")
+        errors = list(Draft202012Validator(
+            schema, format_checker=Draft202012Validator.FORMAT_CHECKER
+        ).iter_errors(state))
+        self.assertTrue(any(list(error.absolute_path) == ["valid_from"] for error in errors))
+
+    def test_verified_renderable_state_requires_evidence_assets_and_bounded_dates(self) -> None:
+        state = read_json(ROOT / "data/historical-states/NN-GAP-BRIHADISVARA-001.json")
+        state["state_kind"] = "DOCUMENTED"
+        state["verification_status"] = "VERIFIED"
+        state["valid_from"] = "1000-01-01"
+        state["valid_to"] = "1010-12-31"
+        schema = read_json(SCHEMAS / "historical-state-v0.schema.json")
+        errors = list(Draft202012Validator(
+            schema, format_checker=Draft202012Validator.FORMAT_CHECKER
+        ).iter_errors(state))
+        paths = {tuple(error.absolute_path) for error in errors}
+        self.assertIn(("evidence_refs",), paths)
+        self.assertIn(("asset_refs",), paths)
+
+    def test_scene_pack_interval_requires_both_bounds_or_neither(self) -> None:
+        pack = read_json(ROOT / "data/scene-packs/BRH-001-GAP-FIXTURE.json")
+        pack["requested_interval"]["from"] = "1000-01-01"
+        schema = read_json(SCHEMAS / "scene-pack-v0.schema.json")
+        errors = list(Draft202012Validator(
+            schema, format_checker=Draft202012Validator.FORMAT_CHECKER
+        ).iter_errors(pack))
+        self.assertTrue(any(list(error.absolute_path) == ["requested_interval"] for error in errors))
+
+    def test_asset_schema_rejects_impossible_verification_date(self) -> None:
+        asset = {
+            "id": "NN:asset:test-cleared",
+            "asset_type": "TEST_ONLY",
+            "sha256": "a" * 64,
+            "source_id": "SRC-TEST",
+            "source_locator": "Synthetic schema test only",
+            "license_id": "TEST_FIXTURE",
+            "rights_status": "CLEARED",
+            "verification_status": "VERIFIED",
+            "verified_by": "Schema test reviewer",
+            "verified_at": "2026-02-30",
+            "attribution": "Synthetic test asset; not for production use."
+        }
+        schema = read_json(SCHEMAS / "asset-v0.schema.json")
+        errors = list(Draft202012Validator(
+            schema, format_checker=Draft202012Validator.FORMAT_CHECKER
+        ).iter_errors(asset))
+        self.assertTrue(any(list(error.absolute_path) == ["verified_at"] for error in errors))
 
     def test_current_project_resolution_stays_gap_until_real_review_gates_pass(self) -> None:
         entity = read_json(ROOT / "data/entities/NN-SITE-BRIHADISVARA-THANJAVUR.json")
