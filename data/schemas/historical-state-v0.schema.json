@@ -8,8 +8,8 @@
     "id": {"type": "string"},
     "entity_id": {"type": "string"},
     "label": {"type": "string"},
-    "valid_from": {"type": ["string", "null"]},
-    "valid_to": {"type": ["string", "null"]},
+    "valid_from": {"type": ["string", "null"], "format": "date"},
+    "valid_to": {"type": ["string", "null"], "format": "date"},
     "state_kind": {"enum": ["DOCUMENTED", "RECONSTRUCTED", "INTERPRETED", "PROVISIONAL", "GAP"]},
     "reconstruction_method": {"type": ["string", "null"]},
     "asset_refs": {"type": "array", "items": {"type": "string"}},
@@ -18,5 +18,25 @@
     "verification_status": {"type": "string"},
     "notes": {"type": ["string", "null"]}
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "verification_status": { "const": "VERIFIED" },
+          "state_kind": { "enum": ["DOCUMENTED", "RECONSTRUCTED", "INTERPRETED"] }
+        },
+        "required": ["verification_status", "state_kind"]
+      },
+      "then": {
+        "required": ["valid_from", "valid_to", "evidence_refs", "asset_refs"],
+        "properties": {
+          "valid_from": { "type": "string", "format": "date" },
+          "valid_to": { "type": "string", "format": "date" },
+          "evidence_refs": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+          "asset_refs": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+        }
+      }
+    }
+  ],
   "additionalProperties": false
 }
