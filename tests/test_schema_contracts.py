@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import csv
 import json
 import unittest
 from pathlib import Path
+from urllib.parse import urlparse
 
 from jsonschema import Draft202012Validator
 
@@ -220,6 +222,93 @@ class SchemaContractTests(unittest.TestCase):
             schema, format_checker=Draft202012Validator.FORMAT_CHECKER
         ).iter_errors(asset))
         self.assertTrue(any(list(error.absolute_path) == ["verified_at"] for error in errors))
+
+
+    def test_repository_records_have_valid_schemas_and_resolvable_references(self) -> None:
+        source_path = ROOT / "data/manifests/source-registry-v0.csv"
+        required_source_fields = {
+            "source_id", "organization", "title", "url", "rights_status",
+            "redistribution_allowed", "commercial_use", "status",
+        }
+        with source_path.open("r", encoding="utf-8-sig", newline="") as handle:
+            reader = csv.DictReader(handle)
+            headers = set(reader.fieldnames or [])
+            self.assertTrue(required_source_fields.issubset(headers))
+            source_rows = list(reader)
+
+        sources = load_source_registry(source_path)
+        self.assertEqual(len(source_rows), len(sources))
+        for row in source_rows:
+            for field in required_source_fields:
+                self.assertTrue((row.get(field) or "").strip(), f"Blank source field {field}: {row.get('source_id')}")
+            parsed_url = urlparse(row["url"].strip())
+            self.assertIn(parsed_url.scheme.casefold(), {"http", "https"})
+            self.assertTrue(parsed_url.netloc, f"Source URL has no host: {row['source_id']}")
+
+        entities = {}
+        for path in sorted((ROOT / "data/entities").glob("*.json")):
+            record = read_json(path)
+            self.assertTrue(record.get("id"), f"Missing entity ID: {path}")
+            self.assertNotIn(record["id"], entities, f"Duplicate entity ID: {record['id']}")
+            assert_valid_schema(self, record, "entity-v0.schema.json")
+            entities[record["id"]] = record
+
+        evidence = load_evidence_records(ROOT / "data/evidence")
+        for record_id, record in evidence.items():
+            assert_valid_schema(self, record, "evidence-v0.schema.json")
+            self.assertIn(record.get("subject_entity_id"), entities, f"Unknown subject for {record_id}")
+            self.assertIn(record.get("source_id"), sources, f"Unknown source for {record_id}")
+            object_id = record.get("object_entity_id")
+            if isinstance(object_id, str) and object_id.strip():
+                self.assertIn(object_id, entities, f"Unknown object entity for {record_id}")
+
+        states = {}
+        for path in sorted((ROOT / "data/historical-states").glob("*.json")):
+            record = read_json(path)
+            self.assertTrue(record.get("id"), f"Missing state ID: {path}")
+            self.assertNotIn(record["id"], states, f"Duplicate state ID: {record['id']}")
+            assert_valid_schema(self, record, "historical-state-v0.schema.json")
+            states[record["id"]] = record
+
+        assets = {}
+        assets_dir = ROOT / "data/assets"
+        for path in sorted(assets_dir.glob("*.json")) if assets_dir.exists() else []:
+            record = read_json(path)
+            self.assertTrue(record.get("id"), f"Missing asset ID: {path}")
+            self.assertNotIn(record["id"], assets, f"Duplicate asset ID: {record['id']}")
+            assert_valid_schema(self, record, "asset-v0.schema.json")
+            self.assertIn(record.get("source_id"), sources, f"Unknown source for asset {record['id']}")
+            assets[record["id"]] = record
+
+        for entity_id, entity in entities.items():
+            for source_id in entity.get("source_refs", []):
+                self.assertIn(source_id, sources, f"Unknown source {source_id} on {entity_id}")
+            for evidence_id in entity.get("evidence_refs", []):
+                self.assertIn(evidence_id, evidence, f"Unknown evidence {evidence_id} on {entity_id}")
+            for asset_id in entity.get("asset_refs", []):
+                self.assertIn(asset_id, assets, f"Unknown asset {asset_id} on {entity_id}")
+
+        for state_id, state in states.items():
+            self.assertIn(state.get("entity_id"), entities, f"Unknown entity on state {state_id}")
+            for evidence_id in state.get("evidence_refs", []):
+                self.assertIn(evidence_id, evidence, f"Unknown evidence {evidence_id} on state {state_id}")
+            for asset_id in state.get("asset_refs", []):
+                self.assertIn(asset_id, assets, f"Unknown asset {asset_id} on state {state_id}")
+
+        for path in sorted((ROOT / "data/scene-packs").glob("*.json")):
+            pack = read_json(path)
+            assert_valid_schema(self, pack, "scene-pack-v0.schema.json")
+            for entity_id in pack.get("entities", []):
+                self.assertIn(entity_id, entities, f"Unknown entity in {path.name}: {entity_id}")
+            for evidence_id in pack.get("evidence_refs", []):
+                self.assertIn(evidence_id, evidence, f"Unknown evidence in {path.name}: {evidence_id}")
+            for asset_id in pack.get("asset_refs", []):
+                self.assertIn(asset_id, assets, f"Unknown asset in {path.name}: {asset_id}")
+            state_id = pack.get("resolved_state_id")
+            if state_id:
+                self.assertIn(state_id, states, f"Unknown resolved state in {path.name}: {state_id}")
+            for gap_id in pack.get("data_gaps", []):
+                self.assertIn(gap_id, states, f"Unknown data-gap state in {path.name}: {gap_id}")
 
     def test_current_project_resolution_stays_gap_until_real_review_gates_pass(self) -> None:
         entity = read_json(ROOT / "data/entities/NN-SITE-BRIHADISVARA-THANJAVUR.json")
