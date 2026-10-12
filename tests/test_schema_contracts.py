@@ -161,6 +161,23 @@ class SchemaContractTests(unittest.TestCase):
         ).iter_errors(state))
         self.assertTrue(any(list(error.absolute_path) == ["valid_from"] for error in errors))
 
+
+    def test_verified_evidence_requires_nonempty_claim_payload(self) -> None:
+        evidence = read_json(ROOT / "data/evidence/NN-EVID-BRH-COMPONENT-001.json")
+        evidence["verification_status"] = "VERIFIED"
+        evidence["reviewer"] = "Schema test reviewer"
+        evidence["verified_at"] = "2026-10-12"
+        evidence["valid_from"] = "1000-01-01"
+        evidence["valid_to"] = "1100-12-31"
+        evidence["assertion_text"] = ""
+        evidence["object_entity_id"] = None
+        evidence["value"] = None
+        schema = read_json(SCHEMAS / "evidence-v0.schema.json")
+        errors = list(Draft202012Validator(
+            schema, format_checker=Draft202012Validator.FORMAT_CHECKER
+        ).iter_errors(evidence))
+        self.assertTrue(any(error.validator == "anyOf" for error in errors))
+
     def test_verified_renderable_state_requires_evidence_assets_and_bounded_dates(self) -> None:
         state = read_json(ROOT / "data/historical-states/NN-GAP-BRIHADISVARA-001.json")
         state["state_kind"] = "DOCUMENTED"
