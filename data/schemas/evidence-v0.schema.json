@@ -8,20 +8,56 @@
     "id": {"type": "string"},
     "assertion_text": {"type": ["string", "null"]},
     "subject_entity_id": {"type": "string"},
-    "predicate": {"type": "string"},
+    "predicate": {"type": "string", "minLength": 1},
     "object_entity_id": {"type": ["string", "null"]},
     "value": {"type": ["string", "number", "boolean", "null"]},
     "source_id": {"type": "string"},
     "source_locator": {"type": ["string", "null"]},
-    "source_date": {"type": ["string", "null"]},
-    "valid_from": {"type": ["string", "null"]},
-    "valid_to": {"type": ["string", "null"]},
+    "source_date": {"type": ["string", "null"], "format": "date"},
+    "valid_from": {"type": ["string", "null"], "format": "date"},
+    "valid_to": {"type": ["string", "null"], "format": "date"},
     "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
     "evidence_class": {"enum": ["A", "B", "C", "D", "E"]},
     "verification_status": {"type": "string"},
     "reviewer": {"type": ["string", "null"]},
-    "verified_at": {"type": ["string", "null"]},
+    "verified_at": {"type": ["string", "null"], "format": "date"},
     "notes": {"type": ["string", "null"]}
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "verification_status": { "const": "VERIFIED" } },
+        "required": ["verification_status"]
+      },
+      "then": {
+        "required": ["source_locator", "reviewer", "verified_at", "valid_from", "valid_to"],
+        "properties": {
+          "source_locator": { "type": "string", "minLength": 1 },
+          "reviewer": { "type": "string", "minLength": 1 },
+          "verified_at": { "type": "string", "format": "date" },
+          "valid_from": { "type": "string", "format": "date" },
+          "valid_to": { "type": "string", "format": "date" }
+        },
+        "anyOf": [
+          {
+            "required": ["assertion_text"],
+            "properties": { "assertion_text": { "type": "string", "minLength": 1 } }
+          },
+          {
+            "required": ["object_entity_id"],
+            "properties": { "object_entity_id": { "type": "string", "minLength": 1 } }
+          },
+          {
+            "required": ["value"],
+            "properties": { "value": { "type": "string", "minLength": 1 } }
+          },
+          {
+            "required": ["value"],
+            "properties": { "value": { "type": ["number", "boolean"] } }
+          }
+        ]
+      }
+    }
+  ],
   "additionalProperties": false
 }

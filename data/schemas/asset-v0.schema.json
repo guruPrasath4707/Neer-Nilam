@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://neer-nilam.local/schema/asset-v0.json",
+  "title": "Neer-Nilam Asset v0",
+  "type": "object",
+  "required": [
+    "id",
+    "asset_type",
+    "sha256",
+    "source_id",
+    "license_id",
+    "rights_status",
+    "verification_status",
+    "verified_by",
+    "verified_at",
+    "attribution"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "asset_type": { "type": "string", "minLength": 1 },
+    "sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+    "source_id": { "type": "string", "minLength": 1 },
+    "source_locator": { "type": ["string", "null"] },
+    "license_id": { "type": "string", "minLength": 1 },
+    "rights_status": { "enum": ["CLEARED", "REVIEW_REQUIRED", "HOLD"] },
+    "verification_status": { "enum": ["VERIFIED", "UNREVIEWED", "REVIEW_REQUIRED"] },
+    "verified_by": { "type": ["string", "null"] },
+    "verified_at": { "type": ["string", "null"], "format": "date" },
+    "attribution": { "type": "string" },
+    "file_path": { "type": ["string", "null"] },
+    "mime_type": { "type": ["string", "null"] },
+    "transformations": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": ["string", "null"] }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "verification_status": { "const": "VERIFIED" } },
+        "required": ["verification_status"]
+      },
+      "then": {
+        "properties": {
+          "verified_by": { "type": "string", "minLength": 1 },
+          "verified_at": { "type": "string", "format": "date" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "rights_status": { "const": "CLEARED" } },
+        "required": ["rights_status"]
+      },
+      "then": {
+        "properties": {
+          "license_id": { "type": "string", "minLength": 1 },
+          "attribution": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

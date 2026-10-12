@@ -1,0 +1,19 @@
+{
+  "id": "NN:evidence:brh:component-001",
+  "assertion_text": "Brihadisvara Temple at Thanjavur is a component of the Great Living Chola Temples World Heritage property.",
+  "subject_entity_id": "NN:site:brihadisvara-thanjavur",
+  "predicate": "is-component-of",
+  "object_entity_id": null,
+  "value": "Great Living Chola Temples World Heritage property",
+  "source_id": "SRC-UNESCO-TNT",
+  "source_locator": "UNESCO World Heritage Centre, Great Living Chola Temples, Outstanding Universal Value / Brief synthesis; https://whc.unesco.org/en/list/250; checked 2026-10-11.",
+  "source_date": null,
+  "valid_from": null,
+  "valid_to": null,
+  "confidence": null,
+  "evidence_class": "A",
+  "verification_status": "SOURCE_LOCATED_REVIEW_PENDING",
+  "reviewer": null,
+  "verified_at": null,
+  "notes": "A single authoritative page supports this identity relationship. This candidate claim has not received project reviewer sign-off and does not support any 3D or historical-state reconstruction. Source terms are flagged for review; no page text or media is embedded."
+}
