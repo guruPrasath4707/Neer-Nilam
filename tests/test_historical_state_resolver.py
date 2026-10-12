@@ -240,7 +240,9 @@ class HistoricalStateResolverTests(unittest.TestCase):
         evidence["NN:evidence:test-001"]["valid_from"] = "circa-1000"
         result = resolve(evidence=evidence)
         self.assertEqual(result["resolution_status"], "GAP")
-        self.assertIn("EVIDENCE_DOES_NOT_COVER_REQUEST:NN:evidence:test-001", result["rejected_candidates"][STATE["id"]])
+        reasons = result["rejected_candidates"][STATE["id"]]
+        self.assertIn("EVIDENCE_INTERVAL_INVALID:NN:evidence:test-001", reasons)
+        self.assertIn("EVIDENCE_DOES_NOT_COVER_REQUEST:NN:evidence:test-001", reasons)
 
     def test_invalid_evidence_verification_date_fails_closed(self) -> None:
         evidence = copy.deepcopy(EVIDENCE)

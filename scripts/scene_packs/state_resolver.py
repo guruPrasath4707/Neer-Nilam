@@ -31,8 +31,10 @@ def _covers_interval(
 ) -> bool:
     start = _validate_iso_date(record_from, f"{label}.valid_from")
     end = _validate_iso_date(record_to, f"{label}.valid_to")
-    if start is None or end is None or start > end:
+    if start is None or end is None:
         return False
+    if start > end:
+        raise ScenePackError(f"{label}.valid_from must be on or before valid_to")
     return start <= requested_from and end >= requested_to
 
 
@@ -128,6 +130,7 @@ def _candidate_reasons(
             )
         except ScenePackError:
             evidence_covers = False
+            reasons.append(f"EVIDENCE_INTERVAL_INVALID:{evidence_id}")
         if not evidence_covers:
             reasons.append(f"EVIDENCE_DOES_NOT_COVER_REQUEST:{evidence_id}")
         source_id = record.get("source_id")
