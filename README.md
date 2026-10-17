@@ -24,6 +24,10 @@ The pilot remains focused on the **Thanjavur–Kumbakonam–Cauvery corridor**, 
 
 The proposed end-to-end architecture, phased implementation gates, team boundaries, language strategy, and selected tooling are documented in [the Platform Technology Roadmap](docs/architecture/003-platform-technology-roadmap-001.md). The initial React + TypeScript web shell lives in apps/web and is intentionally wired to the existing Brihadisvara GAP fixture. It does not yet implement a GIS client, API, or 3D historical renderer.
 
+## Technology roadmap
+
+The proposed end-to-end architecture, phased implementation gates, team boundaries, language strategy, and selected tooling are documented in the Platform Technology Roadmap at docs/architecture/003-platform-technology-roadmap-001.md. The initial React + TypeScript web shell lives in apps/web and is intentionally wired to the existing Brihadisvara GAP fixture. It does not yet implement a GIS client, API, or 3D historical renderer.
+
 ## Data collection
 
 The curated acquisition queue is data/manifests/data-lake-acquisition-v1.csv. The master website/source trail is docs/sources/WEBSITE_INDEX.md.
