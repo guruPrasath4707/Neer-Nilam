@@ -1,0 +1,45 @@
+name: Web quality
+
+on:
+  pull_request:
+    paths:
+      - "apps/web/**"
+      - "data/schemas/scene-pack-v0.schema.json"
+      - "data/scene-packs/**"
+      - "data/entities/**"
+      - "data/historical-states/**"
+      - ".github/workflows/web-quality.yml"
+  push:
+    branches: [main]
+    paths:
+      - "apps/web/**"
+      - "data/schemas/scene-pack-v0.schema.json"
+      - "data/scene-packs/**"
+      - "data/entities/**"
+      - "data/historical-states/**"
+      - ".github/workflows/web-quality.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  web-quality:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Type-check
+        run: npm run typecheck
+      - name: Run scene-pack contract tests
+        run: npm test
+      - name: Build web application
+        run: npm run build

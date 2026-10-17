@@ -20,6 +20,14 @@ The pilot remains focused on the **Thanjavur–Kumbakonam–Cauvery corridor**, 
 - Raw datasets should be stored on the user's external data drive, not committed to this public repository unless redistribution rights are explicitly cleared.
 - The presentation layer remains replaceable; no final physical display technology has been selected.
 
+## Technology roadmap
+
+The proposed end-to-end architecture, phased implementation gates, team boundaries, language strategy, and selected tooling are documented in [the Platform Technology Roadmap](docs/architecture/003-platform-technology-roadmap-001.md). The initial React + TypeScript web shell lives in apps/web and is intentionally wired to the existing Brihadisvara GAP fixture. It does not yet implement a GIS client, API, or 3D historical renderer.
+
+## Technology roadmap
+
+The proposed end-to-end architecture, phased implementation gates, team boundaries, language strategy, and selected tooling are documented in the Platform Technology Roadmap at docs/architecture/003-platform-technology-roadmap-001.md. The initial React + TypeScript web shell lives in apps/web and is intentionally wired to the existing Brihadisvara GAP fixture. It does not yet implement a GIS client, API, or 3D historical renderer.
+
 ## Data collection
 
 The curated acquisition queue is data/manifests/data-lake-acquisition-v1.csv. The master website/source trail is docs/sources/WEBSITE_INDEX.md.
@@ -46,4 +54,4 @@ Major ideas, prompts, research results, decisions, assumptions, rejected approac
 **Phase:** software-first data-lake collection  
 **Pilot start:** Brihadisvara Temple, Thanjavur  
 **Physical representation:** undecided; guidance path is being explored by Judy ma'am  
-**Application implementation:** not yet started
+**Application implementation:** initial React/TypeScript GAP-safe shell; GIS client, API, and 3D viewer remain future gates
