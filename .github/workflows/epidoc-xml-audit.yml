@@ -1,0 +1,25 @@
+name: EpiDoc XML audit utility
+
+on:
+  push:
+    branches:
+      - feat/epidoc-xml-audit-v0
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  audit-utility-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run standard-library unit tests
+        run: python -m unittest discover -s tests -v
