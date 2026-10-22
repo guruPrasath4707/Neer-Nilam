@@ -21,5 +21,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Run standard-library unit tests
+      - name: Install development dependencies when a manifest is present
+        run: |
+          if [ -f requirements-dev.txt ]; then
+            python -m pip install -r requirements-dev.txt
+          fi
+      - name: Run unit tests
         run: python -m unittest discover -s tests -v
